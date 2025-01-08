@@ -14,12 +14,11 @@ const nextConfig: NextConfig = withPWA({
         cacheName: 'google-fonts',
         expiration: {
           maxEntries: 10,
-          maxAgeSeconds: 60 * 60 * 24 * 365, // 1년
+          maxAgeSeconds: 60 * 60 * 24 * 365,
         },
       },
     },
   ],
 });
 
-// Next.js 설정 내보내기
 export default nextConfig;
