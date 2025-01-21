@@ -13,6 +13,10 @@ export default {
         foreground: 'var(--foreground)',
         slateGray: '#566270',
         neutralGray: '#AFAFAF',
+        lightPurple: '#A593E0',
+        danger: '#B6000F',
+        sucess: '#2BBE00',
+
       },
     },
   },
