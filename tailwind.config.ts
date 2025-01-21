@@ -16,6 +16,7 @@ export default {
         lightPurple: '#A593E0',
         danger: '#B6000F',
         sucess: '#2BBE00',
+
       },
     },
   },
