@@ -1,6 +1,6 @@
 type ChatBtnStyleProps = {
   backgroundColor: string;
-  onClick: React.MouseEventHandler<HTMLDivElement>;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
 };
 
 const ChatBtn = ({ backgroundColor, onClick }: ChatBtnStyleProps) => {
