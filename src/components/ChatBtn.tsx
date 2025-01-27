@@ -8,7 +8,7 @@ const ChatBtn = ({ backgroundColor, onClick }: ChatBtnStyleProps) => {
     <div
       onClick={onClick}
       style={{ backgroundColor }}
-      className="w-[70px] h-[70px] flex justify-center items-center rounded-full text=[32px] cursor-pointer"
+      className="fixed top-[600px] right-[50px] w-[70px] h-[70px] flex justify-center items-center rounded-full text=[32px] cursor-pointer"
     >
       이미지 넣을 자리
     </div>

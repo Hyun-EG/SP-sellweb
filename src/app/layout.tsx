@@ -4,6 +4,8 @@ import './globals.css';
 import NavBar from '@/components/NavBar';
 import Footer from '@/components/Footer';
 import Contents from '@/components/Contents';
+import ChatBtn from '@/components/ChatBtn';
+import BackToTop from '@/components/BackToTop';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -42,6 +44,8 @@ export default function RootLayout({
       >
         <NavBar />
         <Contents>{children}</Contents>
+        <ChatBtn backgroundColor="black" />
+        <BackToTop />
         <Footer />
       </body>
     </html>
