@@ -4,7 +4,7 @@ import iconMail from '../../public/svgs/icon-mail(W).svg';
 
 const Footer = () => {
   return (
-    <div className="w-[1920px] h-[584px] flex justify-center items-center bg-white">
+    <div className="w-full h-[584px] flex justify-center items-center bg-white">
       <div className="w-[1200px] h-[584px] column bg-[#f9f9f9]">
         <div className="w-[1200px] h-[442px] flex border-[#afafaf] border-b">
           <div className="w-[300px] h-[442px] column text-black">
