@@ -1,10 +1,12 @@
+import PageOptions from '@/components/PageOptions';
 import TemplateCard from '@/components/TemplateCard';
 import TitleBox from '@/components/TitleBox';
 
 export default function Temp() {
   return (
-    <div className="w-full flex flex-col items-center gap-[15px]">
+    <div className="w-full h-screen flex flex-col items-center gap-[15px]">
       <TitleBox title="템플릿 소개" />
+      <PageOptions />
       <TemplateCard
         title="실시간 사원관리 웹사이트"
         subscription="이거 사원관리 잘됨"
