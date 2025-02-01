@@ -11,12 +11,12 @@ export default {
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
+        customPink: '#DB2777',
         slateGray: '#566270',
         neutralGray: '#AFAFAF',
         lightPurple: '#A593E0',
         danger: '#B6000F',
         sucess: '#2BBE00',
-
       },
     },
   },

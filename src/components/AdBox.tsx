@@ -11,9 +11,9 @@ const AdBox = ({ content }: MessageProps) => {
   return (
     <>
       {isShow ? (
-        <div className=" h-10 flex justify-between items-center bg-custom-pink px-3 ">
+        <div className=" h-10 flex justify-between items-center bg-customPink px-3 ">
           <span></span>
-          <span>{content}</span>
+          <span className="text-white">{content}</span>
           <span
             onClick={() => {
               setIsShow(isShow ? false : true);
