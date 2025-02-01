@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import Contents from '@/components/Contents';
 import ChatBtn from '@/components/ChatBtn';
 import BackToTop from '@/components/BackToTop';
+import AdBox from '@/components/AdBox';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -42,6 +43,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <AdBox content="광고글입니다." />
         <NavBar />
         <Contents>{children}</Contents>
         <ChatBtn backgroundColor="black" />
