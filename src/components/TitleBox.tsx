@@ -6,7 +6,7 @@ type TitleProps = {
 
 const TitleBox = ({ title }: TitleProps) => {
   return (
-    <div className="w-full h-[80px] p-[10px] flex justify-start items-center text-[24px]  border-b border-[#afafaf]">
+    <div className="w-full h-[80px] p-[10px] mb-[10px] flex justify-start items-center text-[24px]  border-b border-[#afafaf]">
       {title}
     </div>
   );
