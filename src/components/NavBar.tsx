@@ -102,7 +102,7 @@ const NavBar = () => {
             <Image
               src={darkMode}
               alt="다크모드 전환 버튼"
-              className="w-[48px] h-[48px] cursor-pointer"
+              className="w-[30px] h-[30px] cursor-pointer"
             />
           </div>
         </ol>
