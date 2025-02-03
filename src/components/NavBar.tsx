@@ -17,6 +17,7 @@ const NavBar = () => {
 
   const templateItems = ['템플릿 소개', '기능 소개'];
   const supportItems = ['1:1문의', '이용안내'];
+  const myPageItems = ['구매내역', '문의내역', '내 정보 수정', '찜 목록'];
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -87,8 +88,24 @@ const NavBar = () => {
               </div>
             )}
           </li>
-          <li className="flex items-center justify-center w-[120px] h-[80px] text-center cursor-pointer">
+          <li
+            onClick={() => toggleDropdown('myPage')}
+            className="flex items-center justify-center w-[120px] h-[80px] text-center cursor-pointer "
+          >
             마이페이지
+            <Image
+              src={arrowDown}
+              alt="마이페이지 드롭다운"
+              className="mb-1 ml-1"
+            />
+            {isClick === 'myPage' && (
+              <div
+                ref={dropdownRef}
+                className="absolute top-full mt-2 w-[255px] bg-white text-white z-50 rounded-lg shadow-md"
+              >
+                <SubNav items={myPageItems} />
+              </div>
+            )}
           </li>
         </ol>
         <ol className="flex justify-center items-center space-x-2 w-1/5 pl-8">
