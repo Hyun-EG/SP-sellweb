@@ -62,7 +62,7 @@ const NavBar = () => {
             {isClick === 'template' && (
               <div
                 ref={dropdownRef}
-                className="absolute top-full mt-2 w-[255px] text-white z-50 rounded-lg shadow-md  "
+                className="absolute top-full mt-2 w-[255px] bg-white text-white z-50 rounded-lg shadow-md  "
               >
                 <SubNav items={templateItems} />
               </div>
@@ -81,7 +81,7 @@ const NavBar = () => {
             {isClick === 'support' && (
               <div
                 ref={dropdownRef}
-                className="absolute top-full mt-2 w-[255px] text-white z-50 rounded-lg shadow-md"
+                className="absolute top-full mt-2 w-[255px] bg-white text-white z-50 rounded-lg shadow-md"
               >
                 <SubNav items={supportItems} />
               </div>
