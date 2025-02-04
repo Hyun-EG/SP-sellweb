@@ -10,45 +10,45 @@ const Footer = () => {
       <div className="w-[1200px] h-[484px] column border-t border-[#afafaf]">
         <div className="w-[1200px] h-[342px] flex border-[#afafaf] border-b">
           <div className="w-[300px] h-[342px] column text-black">
-            <div className="w-[300px] h-[130px] flex justify-center items-center">
+            <div className="w-[300px] h-[100px] flex justify-center items-center">
               <Image src={iconLogo} alt="로고" />
             </div>
             <div className="w-[300px] h-[212px]"></div>
           </div>
           <div className="w-[300px] h-[342px]">
-            <div className="w-[300px] h-[130px] flex justify-center items-center text-black text-[24px]">
+            <div className="w-[300px] h-[80px] flex justify-center items-center text-black text-[24px]">
               템플릿안내
             </div>
             <div className="w-[300px] h-[52px] flex justify-center items-center text-black">
-              서비스 소개
+              <Link href="/temp">템플릿 소개</Link>
             </div>
             <div className="w-[300px] h-[52px] flex justify-center items-center text-black">
-              <Link href="/temp">템플릿 둘러보기</Link>
+              <Link href="/features">기능 소개</Link>
             </div>
           </div>
           <div className="w-[300px] h-[342px]">
-            <div className="w-[300px] h-[130px] flex justify-center items-center text-black text-[24px]">
+            <div className="w-[300px] h-[80px] flex justify-center items-center text-black text-[24px]">
               고객지원
             </div>
             <div className="w-[300px] h-[52px] flex justify-center items-center text-black">
-              1:1 고객문의
-            </div>
-            <div className="w-[300px] h-[52px] flex justify-center items-center text-black">
-              이용안내
+              <Link href="/ask">1:1 고객문의</Link>
             </div>
           </div>
           <div className="w-[300px] h-[342px]">
-            <div className="w-[300px] h-[130px] flex justify-center items-center text-black text-[24px]">
+            <div className="w-[300px] h-[80px] flex justify-center items-center text-black text-[24px]">
               마이페이지
             </div>
             <div className="w-[300px] h-[52px] flex justify-center items-center text-black">
-              구매내역
+              <Link href="/mypage/bought">구매내역</Link>
             </div>
             <div className="w-[300px] h-[52px] flex justify-center items-center text-black">
-              문의내역
+              <Link href="/mypage/ask">문의내역</Link>
             </div>
             <div className="w-[300px] h-[52px] flex justify-center items-center text-black">
-              내 정보 수정
+              <Link href="/mypage/edit">내 정보 수정</Link>
+            </div>
+            <div className="w-[300px] h-[52px] flex justify-center items-center text-black">
+              <Link href="/mypage/like">찜 목록</Link>
             </div>
           </div>
         </div>
