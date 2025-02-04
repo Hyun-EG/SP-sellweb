@@ -1,4 +1,3 @@
-import React from 'react';
 import Image from 'next/image';
 import Input from '@/components/Input';
 import Button from '@/components/Button';
@@ -9,52 +8,83 @@ import googleIcon from '../../../public/svgs/icon-google.svg';
 const page = () => {
   return (
     <>
-      <div className="flex">
+      <div className="flex justify-center items-center w-full h-[80vh]">
         <div>
-          <div>
+          <div className="flex flex-col w-[600px] justify-start gap-[18px]">
             <h1 className="text-[64px]">셀웹에 오신것을 </h1>
             <h2 className="text-[64px] text-right text-lightPurple">
               환영합니다.
             </h2>
+            <Image
+              className="w-[400px] h-[400px] ml-[100px]"
+              src={backGroundImg}
+              alt="회원가입 이미지"
+            />
           </div>
-          <Image src={backGroundImg} alt="회원가입 이미지" />
         </div>
-        <div className="flex flex-col items-center justify-evenly w-[600px]">
-          <h1 className="w-[500px] text-[36px] mb-[36px]">회원가입</h1>
+        <div className="flex flex-col items-center gap-[18px] w-[600px]">
+          <h1 className="w-[600px] text-[28px] ml-[175px]">회원가입</h1>
           <Input
             state="default"
             placeholder="이름을 입력해주세요."
-            width={500}
-            height={70}
+            width={428}
+            height={48}
             borderRadius={8}
           />
+          <div className="flex gap-[14px]">
+            <Input
+              state="default"
+              placeholder="전화번호를 입력해주세요."
+              width={200}
+              height={48}
+              borderRadius={8}
+            />
+            <Button
+              state="white"
+              width={100}
+              height={48}
+              color="#ffffff"
+              fontColor="#000000"
+            >
+              인증번호 받기
+            </Button>
+            <Button
+              state="white"
+              width={100}
+              height={48}
+              color="#ffffff"
+              fontColor="#000000"
+            >
+              인증확인
+            </Button>
+          </div>
           <Input
             state="default"
             placeholder="아이디 또는 이메일을 입력해주세요."
-            width={500}
-            height={70}
+            width={428}
+            height={48}
             borderRadius={8}
           />
           <Input
             state="default"
             placeholder="비밀번호를 입력해주세요."
-            width={500}
-            height={70}
+            width={428}
+            height={48}
             borderRadius={8}
           />
           <Input
-            width={500}
-            height={70}
+            width={428}
+            height={48}
             state="default"
             placeholder="비밀번호를 다시 입력해주세요."
             borderRadius={8}
           />
-          <Button width={500} height={70} state="white">
+          <Button width={428} height={48} state="white" color="#A593E0">
             회원가입
           </Button>
           <Button
-            width={500}
-            height={70}
+            width={428}
+            height={48}
             state="white"
             color="#ffffff"
             fontColor="#000000"
@@ -71,9 +101,9 @@ const page = () => {
             </div>
           </Button>
           <Button
-            width={500}
-            height={70}
             state="white"
+            width={428}
+            height={48}
             color="#ffea00"
             fontColor="#000000"
           >
