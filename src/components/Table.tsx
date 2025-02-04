@@ -1,7 +1,7 @@
 export default function Table() {
   return (
     <div className="flex flex-col">
-      <div className="w-[1200px] h-[100px] flex bg-[#F4F4F4] border-t border-b border-[#afafaf]">
+      <div className="w-[1200px] h-[100px] flex bg-[#F4F4F4] border-b border-[#afafaf]">
         <div className="w-[100px] flex justify-center items-center border-r border-[#afafaf]">
           번호
         </div>
