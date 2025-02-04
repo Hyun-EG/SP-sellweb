@@ -6,8 +6,8 @@ type InputState = 'sucess' | 'danger' | 'focus' | 'default';
 
 type InputProps = {
   children?: React.ReactNode;
-  placeholder: string;
-  state: InputState;
+  placeholder?: string;
+  state?: InputState;
   width?: string | number;
   height?: string | number;
   borderRadius?: string | number;
