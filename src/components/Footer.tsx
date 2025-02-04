@@ -33,6 +33,9 @@ const Footer = () => {
             <div className="w-[300px] h-[52px] flex justify-center items-center text-black">
               <Link href="/ask">1:1 고객문의</Link>
             </div>
+            <div className="w-[300px] h-[52px] flex justify-center items-center text-black">
+              <Link href="/notice">공지사항</Link>
+            </div>
           </div>
           <div className="w-[300px] h-[342px]">
             <div className="w-[300px] h-[80px] flex justify-center items-center text-black text-[24px]">
