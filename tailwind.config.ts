@@ -18,6 +18,19 @@ export default {
         danger: '#B6000F',
         sucess: '#2BBE00',
       },
+      animation: {
+        rotateMenu: 'rotateMenu 400ms ease-in-out forwards',
+      },
+      keyframes: {
+        rotateMenu: {
+          '0%': { transform: 'rotateX(-90deg)' },
+          '70%': { transform: 'rotateX(20deg)' },
+          '100%': { transform: 'rotateX(0deg)' },
+        },
+      },
+      transformOrigin: {
+        'top-center': 'top center',
+      },
     },
   },
   plugins: [],
