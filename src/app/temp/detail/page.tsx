@@ -1,6 +1,7 @@
 import React from 'react';
 import TemplateCardDetail from '../../../components/TemplateCardDetail';
 import TitleBox from '@/components/TitleBox';
+import SlideBar from '@/components/SlideBar';
 
 const page = () => {
   return (
@@ -17,6 +18,7 @@ const page = () => {
 직원관리 기능이 있고,  시각화 된 그래프로 
 한눈에 전체 업무량과 직원의 업무량의 진행상황을 알아볼 수 있습니다."
       />
+      <SlideBar />
     </>
   );
 };
