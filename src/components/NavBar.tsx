@@ -22,6 +22,10 @@ const NavBar = () => {
   ];
   const supportItems = [
     {
+      label: '공지 사항',
+      href: '/notice',
+    },
+    {
       label: '1:1 문의',
       href: '/ask',
     },
