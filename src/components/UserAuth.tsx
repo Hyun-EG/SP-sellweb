@@ -4,7 +4,11 @@ import Button from './Button';
 import AuthModal from './AuthModal';
 import SlideBar from './SlideBar';
 
-const UserAuth = () => {
+interface UserAuthProps {
+  onClose: () => void;
+}
+
+const UserAuth = ({ onClose }: UserAuthProps) => {
   const [activeTab, setActiveTab] = useState<number>(0);
 
   const findID = (
@@ -28,8 +32,13 @@ const UserAuth = () => {
     </div>
   );
 
+  const handleOutsideClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onClose();
+  };
+
   return (
-    <div>
+    <div onClick={handleOutsideClick}>
       <AuthModal>
         <h1 className="font-bold text-center text-3xl mt-8">SellWeb</h1>
         <div className="flex flex-col gap-6">

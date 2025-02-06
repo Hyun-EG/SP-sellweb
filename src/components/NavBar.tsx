@@ -4,18 +4,19 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import SubNav from './SubNav';
+import UserAuth from './UserAuth';
 import logo from '../../public/svgs/icon-logo.svg';
 import darkMode from '../../public/svgs/icon-moon.svg';
 import arrowDown from '../../public/svgs/icon-arrowDown.svg';
 
 const NavBar = () => {
   const [isClick, setIsClick] = useState<string | false>(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const toggleDropdown = (dropdown: string) => {
     setIsClick((prev) => (prev === dropdown ? false : dropdown));
   };
-
   const templateItems = [
     { label: '템플릿 소개', href: '/temp' },
     { label: '기능 소개', href: '/features' },
@@ -52,7 +53,6 @@ const NavBar = () => {
       href: '/mypage/like',
     },
   ];
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -64,7 +64,6 @@ const NavBar = () => {
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -147,11 +146,12 @@ const NavBar = () => {
           </li>
         </ol>
         <ol className="flex justify-center items-center space-x-2 w-1/5 pl-8">
-          <Link href="/">
-            <li className="flex items-center justify-center w-[120px] h-[80px] text-center cursor-pointer">
-              로그인
-            </li>
-          </Link>
+          <li
+            onClick={() => setIsAuthOpen(true)}
+            className="flex items-center justify-center w-[120px] h-[80px] text-center cursor-pointer"
+          >
+            로그인
+          </li>
           <Link href="/signup">
             <li className="flex items-center justify-center w-[120px] h-[80px] text-center cursor-pointer">
               회원가입
@@ -166,6 +166,7 @@ const NavBar = () => {
           </div>
         </ol>
       </header>
+      {isAuthOpen && <UserAuth onClose={() => setIsAuthOpen(false)} />}
     </>
   );
 };
