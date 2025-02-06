@@ -147,7 +147,7 @@ const NavBar = () => {
           </li>
         </ol>
         <ol className="flex justify-center items-center space-x-2 w-1/5 pl-8">
-          <Link href="/login">
+          <Link href="/">
             <li className="flex items-center justify-center w-[120px] h-[80px] text-center cursor-pointer">
               로그인
             </li>

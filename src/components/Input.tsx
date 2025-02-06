@@ -19,7 +19,7 @@ const Input = ({ placeholder, width, height, borderRadius }: InputProps) => {
   const inputStyle = {
     width: width ? `${width}px` : 'auto',
     height: height ? `${height}px` : 'auto',
-    borderRadius: borderRadius ? `${borderRadius}px` : 'auto',
+    borderRadius: borderRadius ? `${borderRadius}px` : '8px',
   };
 
   // valid 체크기능 추후 추가 예정
