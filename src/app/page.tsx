@@ -1,4 +1,7 @@
 import Image from 'next/image';
+import AuthModal from '@/components/AuthModal';
+import Button from '@/components/Button';
+import Input from '@/components/Input';
 
 export default function Home() {
   return (
@@ -12,6 +15,35 @@ export default function Home() {
           height={38}
           priority
         />
+        <AuthModal>
+          <h1 className="font-bold text-center text-3xl mt-8">SellWeb</h1>
+          <div className="flex flex-col justify-center items-center h-[80%] gap-[24px]">
+            <Input
+              placeholder="아이디 또는 이메일을 입력해주세요."
+              width={360}
+              height={50}
+            />
+            <Input
+              placeholder="비밀번호를 입력해주세요."
+              width={360}
+              height={50}
+            />
+            <Button theme="white" width={360} height={40}>
+              로그인
+            </Button>
+            <div className=" flex flex-col justify-around h-[80px]">
+              <p className="text-[18px]">아직 셀웹의 회원이 아니신가요?</p>
+              <div className="flex justify-around text-sm w-[100%]">
+                <p className=" hover:text-lightPurple cursor-pointer">
+                  회원가입
+                </p>
+                <p className=" hover:text-lightPurple cursor-pointer">
+                  아이디/비밀번호 찾기
+                </p>
+              </div>
+            </div>
+          </div>
+        </AuthModal>
         <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           <li className="mb-2">
             Get started by editing{' '}
