@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 
-type SlideBarProps = {
-  items?: string[];
-  slideWidth?: number;
-  onTabChange?: (index: number) => void;
-};
+interface SlideBarProps {
+  slideWidth: number;
+  items: string[];
+  onTabChange: (index: number) => void;
+  activeIndex: number;
+}
 
 const SlideBar = ({
   items = ['서비스 소개', '가격 정보', '리뷰'],
