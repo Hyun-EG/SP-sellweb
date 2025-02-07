@@ -63,7 +63,7 @@ const Button = ({
     <button
       type="button"
       style={buttonStyle}
-      className="font-semibold rounded-lg shadow-md border border-neutralGray"
+      className="font-semibold rounded-lg shadow-md border-2 border-neutralGray"
       onClick={handleClick}
       disabled={state === 'disabled'}
     >

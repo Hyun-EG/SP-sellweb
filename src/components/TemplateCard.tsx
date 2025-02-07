@@ -31,14 +31,14 @@ const TemplateCard = ({
     <>
       <div
         style={cardStyle}
-        className="flex justify-around w-[1000px] h-[250px] border border-gray-300 relative"
+        className="flex justify-around w-[1000px] h-[250px] border border-gray-300 "
       >
         <div className="flex flex-col justify-evenly w-[40%]">
           <h2 className="text-[24px] font-bold">{title}</h2>
           <p className="whitespace-wrap font-bold">{subscription}</p>
         </div>
         <div className="flex flex-col justify-evenly w-[20%]">
-          <div className="h-[60%] relative">
+          <div className="h-[60%] relative -z-10">
             <div className="absolute top-0 bottom-[50px] right-[210px] w-px bg-gray-300"></div>
             <div
               onClick={() => setIsHeart(!isHeart)}

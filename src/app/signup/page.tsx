@@ -92,13 +92,13 @@ const page = () => {
             color="#ffffff"
             fontColor="#000000"
           >
-            <div className="relative flex items-center justify-center w-full h-full">
+            <div className="relative flex items-center justify-center w-full h-full ">
               <Image
                 src={googleIcon}
                 alt="구글로 회원가입"
                 width={26}
                 height={26}
-                className="absolute left-4"
+                className="absolute left-4 "
               />
               구글로 회원가입
             </div>
