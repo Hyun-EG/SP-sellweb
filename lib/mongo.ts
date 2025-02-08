@@ -8,6 +8,7 @@ export async function connectDB() {
       await mongoose.connect(MONGO_URI);
     } catch (error) {
       console.error('DB 연결 실패:', error);
+      throw new Error('DB 연결 실패');
     }
   }
 }
