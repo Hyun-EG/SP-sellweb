@@ -6,9 +6,9 @@ function checkUserName(userName: string): boolean {
   return userNameRegex.test(userName);
 }
 
-function checkEmail(userId: string): boolean {
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  return emailRegex.test(userId);
+function checkUserId(userId: string): boolean {
+  const userIdRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return userIdRegex.test(userId);
 }
 
 function checkPhoneNumber(phoneNumber: string): boolean {
@@ -39,7 +39,7 @@ export default async function signupUser(
     throw new Error('올바른 이름을 입력해주세요.');
   }
 
-  if (!checkEmail(userId)) {
+  if (!checkUserId(userId)) {
     throw new Error('올바른 아이디디를 입력해주세요.');
   }
 
