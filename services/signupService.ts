@@ -6,9 +6,9 @@ function checkUserName(userName: string): boolean {
   return userNameRegex.test(userName);
 }
 
-function checkEmail(email: string): boolean {
+function checkEmail(userId: string): boolean {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  return emailRegex.test(email);
+  return emailRegex.test(userId);
 }
 
 function checkPhoneNumber(phoneNumber: string): boolean {
@@ -30,7 +30,7 @@ async function hashPassword(password: string): Promise<string> {
 
 export default async function signupUser(
   userName: string,
-  email: string,
+  userId: string,
   phoneNumber: string,
   password: string,
   confirmPassword: string
@@ -39,8 +39,8 @@ export default async function signupUser(
     throw new Error('올바른 이름을 입력해주세요.');
   }
 
-  if (!checkEmail(email)) {
-    throw new Error('올바른 이메일 주소를 입력해주세요.');
+  if (!checkEmail(userId)) {
+    throw new Error('올바른 아이디디를 입력해주세요.');
   }
 
   if (!checkPhoneNumber(phoneNumber)) {
@@ -61,7 +61,7 @@ export default async function signupUser(
 
   const user = new User({
     userName,
-    email,
+    userId,
     password: hashedPassword,
     phoneNumber,
   });

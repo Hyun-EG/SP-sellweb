@@ -11,12 +11,12 @@ async function checkPasswordMatch(
 }
 
 export async function POST(request: Request) {
-  const { email, password } = await request.json();
+  const { userId, password } = await request.json();
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ userId });
   if (!user) {
     return NextResponse.json(
-      { message: '이메일 또는 비밀번호가 일치하지 않습니다.' },
+      { message: '아이디 또는 비밀번호가 일치하지 않습니다.' },
       { status: 400 }
     );
   }
@@ -24,13 +24,13 @@ export async function POST(request: Request) {
   const isPasswordCorrect = await checkPasswordMatch(password, user.password);
   if (!isPasswordCorrect) {
     return NextResponse.json(
-      { message: '이메일 또는 비밀번호가 일치하지 않습니다.' },
+      { message: '아이디 또는 비밀번호가 일치하지 않습니다.' },
       { status: 400 }
     );
   }
 
   const accessToken = jwt.sign(
-    { userId: user._id },
+    { userId: user.userId },
     process.env.JWT_SECRET_KEY!,
     {
       expiresIn: '1h',
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
   );
 
   const refreshToken = jwt.sign(
-    { userId: user._id },
+    { userId: user.userId },
     process.env.JWT_SECRET_KEY!,
     {
       expiresIn: '7d',
