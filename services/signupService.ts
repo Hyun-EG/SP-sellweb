@@ -40,7 +40,7 @@ export default async function signupUser(
   }
 
   if (!checkUserId(userId)) {
-    throw new Error('올바른 아이디디를 입력해주세요.');
+    throw new Error('올바른 아이디를 입력해주세요.');
   }
 
   if (!checkPhoneNumber(phoneNumber)) {
