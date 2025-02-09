@@ -14,6 +14,7 @@ export default {
         customPink: '#DB2777',
         slateGray: '#566270',
         neutralGray: '#AFAFAF',
+        lightGray: '#F4F4F4',
         lightPurple: '#A593E0',
         danger: '#B6000F',
         sucess: '#2BBE00',
