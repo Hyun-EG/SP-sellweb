@@ -11,6 +11,14 @@ export async function POST(request: Request) {
   try {
     const { phoneNumber } = await request.json();
 
+    // 전화번호 형식 검증: 전화번호가 +로 시작하는지 확인
+    if (!phoneNumber || !phoneNumber.startsWith('+')) {
+      return NextResponse.json(
+        { error: '잘못된 전화번호 형식입니다.' },
+        { status: 400 }
+      );
+    }
+
     const verification = await client.verify.v2
       .services(serviceSid)
       .verifications.create({ to: phoneNumber, channel: 'sms' });
