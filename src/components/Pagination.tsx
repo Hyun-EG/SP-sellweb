@@ -19,7 +19,7 @@ export default function Pagination({
 
   useEffect(() => {
     setCurPageShowData(curPageShowData);
-  }, [curPageShowData, setCurPageShowData]);
+  }, [page, curPageShowData, setCurPageShowData]);
 
   return (
     <div className="my-[20px] flex justify-center items-center gap-[20px]">
