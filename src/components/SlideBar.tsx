@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 interface SlideBarProps {
   slideWidth: number;
   items: string[];
+  // eslint-disable-next-line no-unused-vars
   onTabChange: (index: number) => void;
   activeIndex: number;
 }
@@ -44,7 +45,7 @@ const SlideBar = ({
   return (
     <div className="relative flex flex-col items-center w-full h-[100px]">
       <div className="flex justify-center items-center w-full border-b-[1px] border-gray-300 relative">
-        {activeIconIndex !== null && (
+        {activeIconIndex !== 0 && (
           <div
             className="absolute bottom-[-2px] h-[3px] bg-lightPurple transition-all duration-300"
             style={{ left: `${slideOffset}px`, width: `${slideWidth}px` }}

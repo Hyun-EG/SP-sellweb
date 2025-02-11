@@ -1,11 +1,17 @@
+'use client';
+
+import { useState } from 'react';
 import Image from 'next/image';
 import Input from '@/components/Input';
 import Button from '@/components/Button';
 import backGroundImg from '../../../public/bgs/bg-seeMySelf.webp';
 import kakaoIcon from '../../../public/svgs/icon-kakao.svg';
 import googleIcon from '../../../public/svgs/icon-google.svg';
+import UserAuth from '@/components/UserAuth';
 
-const page = () => {
+const Page = () => {
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
   return (
     <>
       <div className="flex justify-center items-center w-full h-[80vh] gap-[50px]">
@@ -34,13 +40,14 @@ const page = () => {
           <div className="flex gap-[14px]">
             <Input
               state="default"
-              placeholder="전화번호를 입력해주세요."
+              placeholder="이메일을 입력해주세요."
               width={200}
               height={48}
               borderRadius={8}
             />
             <Button
               variant="request"
+              state="default"
               theme="white"
               width={100}
               height={48}
@@ -51,19 +58,18 @@ const page = () => {
             </Button>
             <Button
               variant="confirm"
-              state="disabled"
               theme="white"
               width={100}
               height={48}
-              color="#ffffff"
-              fontColor="#000000"
+              color="#afafaf"
+              fontColor="#ffffff"
             >
               인증확인
             </Button>
           </div>
           <Input
             state="default"
-            placeholder="아이디 또는 이메일을 입력해주세요."
+            placeholder="아이디를 입력해주세요."
             width={428}
             height={48}
             borderRadius={8}
@@ -82,7 +88,7 @@ const page = () => {
             placeholder="비밀번호를 다시 입력해주세요."
             borderRadius={8}
           />
-          <Button width={428} height={48} theme="white">
+          <Button width={428} height={48} theme="white" state="default">
             회원가입
           </Button>
           <Button
@@ -91,16 +97,16 @@ const page = () => {
             theme="white"
             color="#ffffff"
             fontColor="#000000"
+            state="default"
           >
-            <div className="relative flex items-center justify-center w-full h-full ">
+            <div className="flex items-center justify-center gap-4 w-full h-full ">
               <Image
                 src={googleIcon}
                 alt="구글로 회원가입"
                 width={26}
                 height={26}
-                className="absolute left-4 "
               />
-              구글로 회원가입
+              <span>구글로 회원가입</span>
             </div>
           </Button>
           <Button
@@ -109,28 +115,34 @@ const page = () => {
             theme="white"
             color="#ffea00"
             fontColor="#000000"
+            state="default"
           >
-            <div className="relative flex items-center justify-center w-full h-full">
+            <div className="flex items-center justify-center gap-3 w-full h-full">
               <Image
                 src={kakaoIcon}
-                alt={'카카오톡으로 회원가입'}
+                alt="카카오톡으로 회원가입"
                 width={26}
                 height={26}
-                className="absolute left-4"
               />
-              카카오톡으로 회원가입
+              <span>카카오톡으로 회원가입</span>
             </div>
           </Button>
           <div className="flex justify-center">
             <p className="text-[16px]">이미 셀웹의 회원이신가요?</p>
-            <p className="ml-2 text-lightPurple text-[16px] cursor-pointer ">
+            <p
+              className="ml-2 text-lightPurple text-[16px] cursor-pointer"
+              onClick={() => setIsAuthModalOpen(true)}
+            >
               로그인
             </p>
           </div>
         </div>
       </div>
+      {isAuthModalOpen && (
+        <UserAuth onClose={() => setIsAuthModalOpen(false)} />
+      )}
     </>
   );
 };
 
-export default page;
+export default Page;
