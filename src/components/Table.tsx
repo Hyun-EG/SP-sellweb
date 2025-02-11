@@ -1,3 +1,8 @@
+'use client';
+
+import { useState } from 'react';
+import Pagination from './Pagination';
+
 export default function Table({
   headers,
   rows,
@@ -5,8 +10,10 @@ export default function Table({
   headers: { label: string; width: string }[];
   rows: string[][];
 }) {
+  const [curPageShowData, setCurPageShowData] = useState<string[][]>([]);
+
   return (
-    <div className="w-[1200px] h-screen flex flex-col">
+    <div className="w-[1200px] flex flex-col">
       <div className="w-[1200px] h-[100px] flex border-b border-[#afafaf] bg-[#f4f4f4]">
         {headers.map((header, index) => (
           <div
@@ -19,8 +26,8 @@ export default function Table({
         ))}
       </div>
 
-      {rows.map((row, index) => (
-        <div key={index} className="h-[80px] flex border-b border-[#afafaf]">
+      {curPageShowData.map((row, index) => (
+        <div key={index} className="h-[60px] flex border-b border-[#afafaf]">
           {row.map((cell, index) => (
             <div
               key={index}
@@ -32,6 +39,7 @@ export default function Table({
           ))}
         </div>
       ))}
+      <Pagination data={rows} setCurPageShowData={setCurPageShowData} />
     </div>
   );
 }
