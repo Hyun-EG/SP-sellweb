@@ -16,6 +16,7 @@ type ButtonProps = {
   fontColor?: string;
   onClick?: () => void;
   children?: React.ReactNode;
+  // cursor?: React.ReactNode;
 };
 
 const Button = ({
@@ -55,7 +56,7 @@ const Button = ({
     backgroundColor:
       state === 'disabled' ? '#d3d3d3' : color || defaultColors[theme],
     color: state === 'disabled' ? '#808080' : fontColor || '#FFFFFF',
-    cursor: state === 'disabled' ? 'not-allowed' : 'pointer',
+    cursor: state === 'default' ? 'pointer' : 'not-allowed',
     opacity: state === 'disabled' ? 0.6 : 1,
   };
 
