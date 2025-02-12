@@ -2,13 +2,16 @@
 
 import { useState } from 'react';
 import Pagination from './Pagination';
+import Link from 'next/link';
 
 export default function Table({
   headers,
   rows,
+  link,
 }: {
   headers: { label: string; width: string }[];
   rows: string[][];
+  link: string;
 }) {
   const [curPageShowData, setCurPageShowData] = useState<string[][]>([]);
 
@@ -34,7 +37,7 @@ export default function Table({
               className="flex justify-center items-center"
               style={{ width: headers[index]?.width }}
             >
-              {cell}
+              <Link href={link}>{cell}</Link>
             </div>
           ))}
         </div>
