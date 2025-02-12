@@ -30,6 +30,7 @@ export default function Notice() {
           { label: '등록 날짜', width: '200px' },
         ]}
         rows={rows}
+        link="/notice/detail"
       />
     </div>
   );
