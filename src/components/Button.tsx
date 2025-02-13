@@ -16,7 +16,6 @@ type ButtonProps = {
   fontColor?: string;
   onClick?: () => void;
   children?: React.ReactNode;
-  // cursor?: React.ReactNode;
 };
 
 const Button = ({
@@ -55,8 +54,7 @@ const Button = ({
     height: height ? `${height}px` : 'auto',
     backgroundColor:
       state === 'disabled' ? '#d3d3d3' : color || defaultColors[theme],
-    color: state === 'disabled' ? '#808080' : fontColor || '#FFFFFF',
-    cursor: state === 'default' ? 'pointer' : 'not-allowed',
+    color: state === 'disabled' ? '#F4F4F4' : fontColor || '#FFFFFF',
     opacity: state === 'disabled' ? 0.6 : 1,
   };
 
@@ -64,7 +62,7 @@ const Button = ({
     <button
       type="button"
       style={buttonStyle}
-      className="font-semibold rounded-lg shadow-md border-2 border-neutralGray"
+      className="font-semibold rounded-lg shadow-ㅡ border-2 border-neutralGray"
       onClick={handleClick}
       disabled={state === 'disabled'}
     >

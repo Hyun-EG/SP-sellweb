@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import Pagination from './Pagination';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+
 
 export default function Table({
   headers,
@@ -14,6 +16,8 @@ export default function Table({
   link: string;
 }) {
   const [curPageShowData, setCurPageShowData] = useState<string[][]>([]);
+
+  const param = usePathname();
 
   return (
     <div className="w-[1200px] flex flex-col">
@@ -28,7 +32,6 @@ export default function Table({
           </div>
         ))}
       </div>
-
       {curPageShowData.map((row, index) => (
         <div key={index} className="h-[60px] flex border-b border-[#afafaf]">
           {row.map((cell, index) => (
@@ -42,7 +45,9 @@ export default function Table({
           ))}
         </div>
       ))}
-      <Pagination data={rows} setCurPageShowData={setCurPageShowData} />
+      {param !== '/mypage/bought/detail' && (
+        <Pagination data={rows} setCurPageShowData={setCurPageShowData} />
+      )}
     </div>
   );
 }

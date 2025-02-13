@@ -30,10 +30,6 @@ const NavBar = () => {
       label: '1:1 문의',
       href: '/ask',
     },
-    {
-      label: '문의하기',
-      href: '/contact',
-    },
   ];
   const myPageItems = [
     {
