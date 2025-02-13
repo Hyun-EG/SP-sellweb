@@ -30,6 +30,7 @@ export default function Page() {
           { label: '등록 날짜', width: '200px' },
         ]}
         rows={rows}
+        link="/mypage/ask/detail"
       />
     </div>
   );

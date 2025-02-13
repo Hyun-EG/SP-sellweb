@@ -27,16 +27,28 @@ export default function Pagination({
         onClick={() => {
           setPage((prev) => Math.max(prev - 1, 1));
         }}
-        className="w-[40px] h-[40px] justify-center items-center border border-[#afafaf]"
+        className={`w-[40px] h-[40px] justify-center items-center border border-[#afafaf] ${page === 1 ? 'bg-[#f4f4f4] text-[#afafaf]' : ''}`}
+        disabled={page === 1}
       >
         &lt;
       </button>
-      <div>{page}</div>
+      {Array.from({ length: totalPage }, (_, i) => i + 1).map((pageNum) => (
+        <button
+          key={pageNum}
+          onClick={() => setPage(pageNum)}
+          className={` ${
+            page === pageNum ? 'text-gray-300 font-bold' : 'border-[#afafaf]'
+          }`}
+        >
+          {pageNum}
+        </button>
+      ))}
       <button
         onClick={() => {
           setPage((prev) => Math.min(prev + 1, totalPage));
         }}
-        className="w-[40px] h-[40px] justify-center items-center border border-[#afafaf]"
+        className={`w-[40px] h-[40px] justify-center items-center border border-[#afafaf] ${page === totalPage ? 'bg-[#f4f4f4] text-[#afafaf]' : ''}`}
+        disabled={page === totalPage}
       >
         &gt;
       </button>
