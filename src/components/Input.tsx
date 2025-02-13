@@ -11,9 +11,18 @@ type InputProps = {
   width?: string | number;
   height?: string | number;
   borderRadius?: string | number;
+  value?: string; // value prop 추가
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const Input = ({ placeholder, width, height, borderRadius }: InputProps) => {
+const Input = ({
+  placeholder,
+  width,
+  height,
+  borderRadius,
+  value,
+  onChange,
+}: InputProps) => {
   const [isFocus, setIsFocus] = useState(false);
 
   const inputStyle = {
@@ -22,23 +31,19 @@ const Input = ({ placeholder, width, height, borderRadius }: InputProps) => {
     borderRadius: borderRadius ? `${borderRadius}px` : '8px',
   };
 
-  // valid 체크기능 추후 추가 예정
-
   return (
-    <>
-      <input
-        type="text"
-        style={inputStyle}
-        placeholder={placeholder}
-        onFocus={() => setIsFocus(true)}
-        onBlur={() => setIsFocus(false)}
-        className={`p-2 outline-none transition-colors ${
-          isFocus
-            ? 'border-2 border-lightPurple'
-            : 'border-2 border-neutralGray'
-        }`}
-      />
-    </>
+    <input
+      type="text"
+      style={inputStyle}
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      onFocus={() => setIsFocus(true)}
+      onBlur={() => setIsFocus(false)}
+      className={`p-2 outline-none transition-colors ${
+        isFocus ? 'border-2 border-lightPurple' : 'border-2 border-neutralGray'
+      }`}
+    />
   );
 };
 
