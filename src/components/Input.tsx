@@ -12,6 +12,7 @@ type InputProps = {
   height?: string | number;
   borderRadius?: string | number;
   value?: string; // value prop 추가
+  // eslint-disable-next-line no-unused-vars
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 

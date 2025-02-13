@@ -11,6 +11,82 @@ import UserAuth from '@/components/UserAuth';
 
 const Page = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [email, setEmail] = useState('');
+  const [userName, setUserName] = useState('');
+  const [userId, setUserId] = useState('');
+  const [password, setPassword] = useState('');
+  const [code, setCode] = useState('');
+
+  const handleSubmit = async () => {
+    // e.preventDefault(); // 기본 동작(새로고침) 방지
+
+    const formData = {
+      userName,
+      userId,
+      password,
+      email,
+      code,
+    };
+
+    try {
+      const response = await fetch('/api/auth/user-info', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert('회원가입 성공!');
+        setUserId('');
+        setUserName('');
+        setPassword('');
+        setEmail('');
+        setCode('');
+      } else {
+        alert(`회원가입 실패: ${result.message}`);
+      }
+    } catch (error) {
+      console.error('회원가입 중 오류 발생:', error);
+      alert('서버 오류가 발생했습니다.');
+    }
+  };
+
+  // 이메일 인증
+  const handleSendEmail = async () => {
+    const generatedCode = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+    setCode(generatedCode);
+
+    try {
+      const response = await fetch('/api/auth/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ to: email, code: generatedCode }),
+      });
+
+      if (!response.ok) {
+        throw new Error('이메일 발송 실패');
+      }
+
+      const data = await response.json();
+
+      if (data.message === '이메일 발송 성공') {
+        alert('인증 코드가 이메일로 발송되었습니다.');
+      } else {
+        alert('이메일 발송에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('에러 발생', error);
+      alert('이메일 발송에 실패했습니다.');
+    }
+  };
 
   return (
     <>
@@ -36,6 +112,8 @@ const Page = () => {
             width={428}
             height={48}
             borderRadius={8}
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
           />
           <div className="flex gap-[14px]">
             <Input
@@ -44,6 +122,8 @@ const Page = () => {
               width={200}
               height={48}
               borderRadius={8}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <Button
               variant="request"
@@ -53,6 +133,7 @@ const Page = () => {
               height={48}
               color="#ffffff"
               fontColor="#000000"
+              onClick={handleSendEmail}
             >
               인증번호 받기
             </Button>
@@ -73,6 +154,8 @@ const Page = () => {
             width={428}
             height={48}
             borderRadius={8}
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
           />
           <Input
             state="default"
@@ -87,8 +170,16 @@ const Page = () => {
             state="default"
             placeholder="비밀번호를 다시 입력해주세요."
             borderRadius={8}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
-          <Button width={428} height={48} theme="white" state="default">
+          <Button
+            width={428}
+            height={48}
+            theme="white"
+            state="default"
+            onClick={handleSubmit}
+          >
             회원가입
           </Button>
           <Button
@@ -146,3 +237,22 @@ const Page = () => {
 };
 
 export default Page;
+
+// import { NextResponse } from 'next/server';
+// import clientPromise from '../../../lib/db';
+
+// export async function GET() {
+//   try {
+//     const client = await clientPromise;
+//     const db = client.db('sellweb');
+
+//     const data = await db.collection('users').find({}).toArray();
+
+//     return NextResponse.json({ success: true, data });
+//   } catch (error) {
+//     return NextResponse.json(
+//       { success: false, error: (error as Error).message },
+//       { status: 500 }
+//     );
+//   }
+// }
