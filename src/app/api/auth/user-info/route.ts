@@ -1,29 +1,61 @@
 import { NextResponse } from 'next/server';
-import User from '../../../../../models/User';
 import { connectDB } from '../../../../../lib/db';
+import signupUser from '../../../../../services/signupService';
 
-// POST 요청 처리
 export async function POST(req: Request) {
   try {
-    // DB 연결
     await connectDB();
+    const { userName, userId, password, email, confirmPassword } =
+      await req.json();
 
-    // 요청에서 데이터 받기
-    const { userName, userId, password, email } = await req.json();
+    if (!userName) {
+      return NextResponse.json(
+        { message: '이름을 입력해주세요.' },
+        { status: 400 }
+      );
+    }
 
-    // 새로운 사용자 객체 생성
-    const newUser = new User({
+    if (!userId) {
+      return NextResponse.json(
+        { message: '아이디를 입력해주세요.' },
+        { status: 400 }
+      );
+    }
+
+    if (!password) {
+      return NextResponse.json(
+        { message: '비밀번호를 입력해주세요.' },
+        { status: 400 }
+      );
+    }
+
+    if (!email) {
+      return NextResponse.json(
+        { message: '이메일을 입력해주세요.' },
+        { status: 400 }
+      );
+    }
+
+    if (password === confirmPassword) {
+      return NextResponse.json(
+        { message: '비밀번호가 서로 다릅니다.' },
+        { status: 400 }
+      );
+    }
+
+    // 회원가입 처리 (signupUser 함수에서 해싱 & 저장)
+    const user = await signupUser(
       userName,
       userId,
-      password,
       email,
-    });
+      password,
+      confirmPassword
+    );
 
-    // DB에 사용자 저장
-    await newUser.save();
-
-    // 성공 응답 반환
-    return NextResponse.json({ message: '회원가입 성공!' }, { status: 201 });
+    return NextResponse.json(
+      { message: '회원가입 성공!', user },
+      { status: 201 }
+    );
   } catch (error) {
     console.error('회원가입 중 오류 발생:', error);
     return NextResponse.json(

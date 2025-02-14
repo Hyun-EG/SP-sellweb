@@ -18,8 +18,6 @@ const Page = () => {
   const [code, setCode] = useState('');
 
   const handleSubmit = async () => {
-    // e.preventDefault(); // 기본 동작(새로고침) 방지
-
     const formData = {
       userName,
       userId,
@@ -114,6 +112,7 @@ const Page = () => {
             borderRadius={8}
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
+            required
           />
           <div className="flex gap-[14px]">
             <Input
@@ -124,6 +123,7 @@ const Page = () => {
               borderRadius={8}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
             <Button
               variant="request"
@@ -156,15 +156,19 @@ const Page = () => {
             borderRadius={8}
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
+            required
           />
           <Input
+            type="password"
             state="default"
             placeholder="비밀번호를 입력해주세요."
             width={428}
             height={48}
             borderRadius={8}
+            required
           />
           <Input
+            type="password"
             width={428}
             height={48}
             state="default"
@@ -172,6 +176,7 @@ const Page = () => {
             borderRadius={8}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
           <Button
             width={428}
@@ -237,22 +242,3 @@ const Page = () => {
 };
 
 export default Page;
-
-// import { NextResponse } from 'next/server';
-// import clientPromise from '../../../lib/db';
-
-// export async function GET() {
-//   try {
-//     const client = await clientPromise;
-//     const db = client.db('sellweb');
-
-//     const data = await db.collection('users').find({}).toArray();
-
-//     return NextResponse.json({ success: true, data });
-//   } catch (error) {
-//     return NextResponse.json(
-//       { success: false, error: (error as Error).message },
-//       { status: 500 }
-//     );
-//   }
-// }
