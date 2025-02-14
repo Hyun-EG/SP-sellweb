@@ -11,9 +11,9 @@ function checkUserId(userId: string): boolean {
   return userIdRegex.test(userId);
 }
 
-function checkPhoneNumber(phoneNumber: string): boolean {
-  const phoneRegex = /^[0-9]{10,11}$/;
-  return phoneRegex.test(phoneNumber);
+function checkEmail(email: string): boolean {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email);
 }
 
 function checkPassword(password: string): boolean {
@@ -31,7 +31,7 @@ async function hashPassword(password: string): Promise<string> {
 export default async function signupUser(
   userName: string,
   userId: string,
-  phoneNumber: string,
+  email: string,
   password: string,
   confirmPassword: string
 ) {
@@ -43,7 +43,7 @@ export default async function signupUser(
     throw new Error('올바른 아이디를 입력해주세요.');
   }
 
-  if (!checkPhoneNumber(phoneNumber)) {
+  if (!checkEmail(email)) {
     throw new Error('전화번호는 10~11자리 숫자여야 합니다.');
   }
 
@@ -53,7 +53,7 @@ export default async function signupUser(
     );
   }
 
-  if (password !== confirmPassword) {
+  if (password === confirmPassword) {
     throw new Error('비밀번호가 서로 일치하지 않습니다.');
   }
 
@@ -63,7 +63,7 @@ export default async function signupUser(
     userName,
     userId,
     password: hashedPassword,
-    phoneNumber,
+    email,
   });
 
   await user.save();
