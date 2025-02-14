@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
+import bcrypt from 'bcryptjs';
 import { connectDB } from '../../../../../lib/db';
 import User from '../../../../../models/User';
+import Verification from '../../../../../models/verification';
 
 export async function POST(req: Request) {
   try {
@@ -18,8 +20,20 @@ export async function POST(req: Request) {
       );
     }
 
-    // 인증번호 검증 (DB 또는 캐시에서 비교 필요)
-    const isValidCode = verificationCode === 'expectedCode'; // 실제로 DB 또는 메모리 캐시에서 인증번호와 비교하는 로직 필요
+    // DB에서 인증번호 찾기
+    const verification = await Verification.findOne({ email });
+    if (!verification) {
+      return NextResponse.json(
+        { message: '인증번호가 만료되었거나 존재하지 않습니다.' },
+        { status: 400 }
+      );
+    }
+
+    // 입력한 인증번호와 해싱된 인증번호 비교
+    const isValidCode = await bcrypt.compare(
+      verificationCode,
+      verification.code
+    );
     if (!isValidCode) {
       return NextResponse.json(
         { message: '인증번호가 올바르지 않습니다.' },
@@ -27,7 +41,8 @@ export async function POST(req: Request) {
       );
     }
 
-    // 인증번호 검증 성공 시, 비밀번호 변경 가능
+    // 인증 성공 시, 인증번호 삭제 (보안 강화)
+    await Verification.deleteOne({ email });
 
     return NextResponse.json(
       { message: '인증 성공! 새 비밀번호를 설정하세요.' },
