@@ -1,5 +1,6 @@
+'use client';
 import Button from './Button';
-import TitleBox from './TitleBox';
+import { usePathname } from 'next/navigation';
 
 interface DetailTableProps {
   title: string;
@@ -12,9 +13,9 @@ export default function DetailTable({
   date,
   content,
 }: DetailTableProps) {
+  const path = usePathname();
   return (
     <div className="w-[1200px] h-screen flex flex-col">
-      <TitleBox title="공지사항" />
       <div className="h-[120px] px-[20px] border-b border-[#afafaf] bg-[#f4f4f4]">
         <div className="h-[60px] flex justify-start items-center text-[24px] font-bold">
           {title}
@@ -42,7 +43,19 @@ export default function DetailTable({
           </div>
         </div>
       </div>
-      <div className="my-[20px] flex justify-end">
+      <div className="my-[20px] flex gap-[20px] justify-end">
+        {path === '/mypage/ask/detail' ? (
+          <Button
+            theme="white"
+            width={80}
+            height={40}
+            color="#fff"
+            fontColor="#000"
+            state="default"
+          >
+            삭제
+          </Button>
+        ) : null}
         <Button
           theme="white"
           width={80}
