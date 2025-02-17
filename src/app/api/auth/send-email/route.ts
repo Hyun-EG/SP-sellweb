@@ -1,11 +1,14 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
+import bcrypt from 'bcryptjs';
 import { connectDB } from '../../../../../lib/db';
 import User from '../../../../../models/User';
-import crypto from 'crypto';
+import Verification from '../../../../../models/verification';
+
+const SALT_ROUNDS = 10;
 
 const generateVerificationCode = () => {
-  return crypto.randomBytes(3).toString('hex'); // 인증번호 생성
+  return Math.random().toString(36).slice(-6);
 };
 
 const sendVerificationEmail = async (
@@ -23,7 +26,7 @@ const sendVerificationEmail = async (
   const mailOptions = {
     from: process.env.NAVER_EMAIL,
     to: email,
-    subject: '비밀번호 찾기 인증번호',
+    subject: '[Sellweb] 비밀번호 찾기 인증번호',
     text: `귀하의 비밀번호 찾기 인증번호는 ${verificationCode}입니다.`,
   };
 
@@ -34,10 +37,8 @@ export async function POST(req: Request) {
   try {
     const { userId, email } = await req.json();
 
-    // DB 연결
     await connectDB();
 
-    // 사용자 찾기
     const user = await User.findOne({ userId, email });
     if (!user) {
       return NextResponse.json(
@@ -46,11 +47,16 @@ export async function POST(req: Request) {
       );
     }
 
-    // 인증번호 생성 및 이메일 발송
     const verificationCode = generateVerificationCode();
-    await sendVerificationEmail(email, verificationCode);
+    const hashedCode = await bcrypt.hash(verificationCode, SALT_ROUNDS);
 
-    // 인증번호를 DB에 저장하거나 메모리 캐시에 저장하는 로직 필요
+    await Verification.findOneAndUpdate(
+      { email },
+      { code: hashedCode, createdAt: new Date() },
+      { upsert: true, new: true }
+    );
+
+    await sendVerificationEmail(email, verificationCode);
 
     return NextResponse.json(
       { message: '인증번호가 이메일로 전송되었습니다.' },
