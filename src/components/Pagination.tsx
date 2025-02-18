@@ -13,21 +13,21 @@ export default function Pagination({
 }) {
   const [page, setPage] = useState(1);
 
-  const totalPage = Math.ceil(Number(data.length) / CUR_PER_PAGE);
-  const startIndex = (page - 1) * CUR_PER_PAGE;
-  const curPageShowData = data.slice(startIndex, startIndex + CUR_PER_PAGE);
+  const totalPage = Math.ceil(data.length / CUR_PER_PAGE);
 
   useEffect(() => {
+    const startIndex = (page - 1) * CUR_PER_PAGE;
+    const curPageShowData = data.slice(startIndex, startIndex + CUR_PER_PAGE);
     setCurPageShowData(curPageShowData);
-  }, [page]);
+  }, [page, data]);
 
   return (
     <div className="my-[20px] flex justify-center items-center gap-[20px]">
       <button
-        onClick={() => {
-          setPage((prev) => Math.max(prev - 1, 1));
-        }}
-        className={`w-[40px] h-[40px] justify-center items-center border border-[#afafaf] ${page === 1 ? 'bg-[#f4f4f4] text-[#afafaf]' : ''}`}
+        onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+        className={`w-[40px] h-[40px] justify-center items-center border border-[#afafaf] ${
+          page === 1 ? 'bg-[#f4f4f4] text-[#afafaf]' : ''
+        }`}
         disabled={page === 1}
       >
         &lt;
@@ -36,7 +36,7 @@ export default function Pagination({
         <button
           key={pageNum}
           onClick={() => setPage(pageNum)}
-          className={` ${
+          className={`${
             page === pageNum ? 'text-gray-300 font-bold' : 'border-[#afafaf]'
           }`}
         >
@@ -44,10 +44,10 @@ export default function Pagination({
         </button>
       ))}
       <button
-        onClick={() => {
-          setPage((prev) => Math.min(prev + 1, totalPage));
-        }}
-        className={`w-[40px] h-[40px] justify-center items-center border border-[#afafaf] ${page === totalPage ? 'bg-[#f4f4f4] text-[#afafaf]' : ''}`}
+        onClick={() => setPage((prev) => Math.min(prev + 1, totalPage))}
+        className={`w-[40px] h-[40px] justify-center items-center border border-[#afafaf] ${
+          page === totalPage ? 'bg-[#f4f4f4] text-[#afafaf]' : ''
+        }`}
         disabled={page === totalPage}
       >
         &gt;

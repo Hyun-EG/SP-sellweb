@@ -23,8 +23,8 @@ export default function Table({
   }, [rows]);
 
   return (
-    <div className="w-[1200px] flex flex-col">
-      <div className="w-[1200px] h-[100px] flex border-b border-[#afafaf] bg-[#f4f4f4]">
+    <div className="w-full flex flex-col">
+      <div className="w-full h-[70px] flex border-b border-[#afafaf] bg-[#f4f4f4]">
         {headers.map((header, index) => (
           <div
             key={index}
@@ -48,9 +48,9 @@ export default function Table({
           ))}
         </div>
       ))}
-      {param !== '/mypage/bought/detail' && (
+      {param !== '/mypage/bought/detail' && param !== '/admin' ? (
         <Pagination data={rows} setCurPageShowData={setCurPageShowData} />
-      )}
+      ) : null}
     </div>
   );
 }

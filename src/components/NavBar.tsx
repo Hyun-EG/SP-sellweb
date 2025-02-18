@@ -140,6 +140,11 @@ const NavBar = () => {
               </div>
             )}
           </li>
+          <Link href="/admin">
+            <li className="flex items-center justify-center w-[120px] h-[80px] text-center cursor-pointer ">
+              관리자
+            </li>
+          </Link>
         </ol>
         <ol className="flex justify-center items-center space-x-2 w-1/5 pl-8">
           <li
