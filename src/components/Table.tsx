@@ -1,10 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Pagination from './Pagination';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-
 
 export default function Table({
   headers,
@@ -18,6 +17,10 @@ export default function Table({
   const [curPageShowData, setCurPageShowData] = useState<string[][]>([]);
 
   const param = usePathname();
+
+  useEffect(() => {
+    setCurPageShowData(rows);
+  }, [rows]);
 
   return (
     <div className="w-[1200px] flex flex-col">
@@ -40,7 +43,7 @@ export default function Table({
               className="flex justify-center items-center"
               style={{ width: headers[index]?.width }}
             >
-              <Link href={link}>{cell}</Link>
+              <Link href={`${link}/${row[0]}`}>{cell}</Link>
             </div>
           ))}
         </div>
