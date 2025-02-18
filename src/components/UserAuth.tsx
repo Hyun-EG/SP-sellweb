@@ -74,7 +74,7 @@ const UserAuth = ({ onClose }: UserAuthProps) => {
         return;
       }
 
-      localStorage.setItem('token', data.token);
+      sessionStorage.setItem('token', data.token);
       alert('로그인 성공!');
       onClose();
     } catch {

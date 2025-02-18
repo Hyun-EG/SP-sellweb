@@ -16,7 +16,7 @@ export default function AskDetailTable() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('token');
 
       if (!token) {
         return;
@@ -49,7 +49,7 @@ export default function AskDetailTable() {
   }, []);
 
   const handleSubmit = async () => {
-    const token = await localStorage.getItem('token');
+    const token = await sessionStorage.getItem('token');
     if (!token) {
       alert('로그인이 필요합니다.');
       return;
