@@ -3,14 +3,10 @@ import Input from './Input';
 import Button from './Button';
 
 const MyPage = () => {
-  const myInfo = [
-    { name: '송재원' },
-    { email: 'aro_jr@naver.com' },
-    { phoneNum: '01038928514' },
-  ];
+  const myInfo = [{ name: '송재원' }, { id: 'aro_jr@naver.com' }];
   return (
     <>
-      <div className="flex flex-col items-center gap-4 text-center">
+      <div className="h-screen flex flex-col justify-center items-center gap-4 text-center ">
         <div>
           <div className="flex bg-lightGray w-[600px] h-[40] justify-start items-center rounded-b-[8px]">
             <div className="font-bold ml-6">{myInfo[0].name}</div>
@@ -27,20 +23,13 @@ const MyPage = () => {
         </div>
         <div className="flex border-b border-[#afafaf]">
           <div className="flex justify-center items-center w-[100px] h-[80px] ">
-            이메일
+            아이디
           </div>
           <div className="flex w-[500px] h-[80px] justify-center items-center">
-            {myInfo[1].email}
+            {myInfo[1].id}
           </div>
         </div>
-        <div className="flex border-b border-[#afafaf]">
-          <div className="flex justify-center items-center w-[100px] h-[80px]">
-            전화번호
-          </div>
-          <div className="flex w-[500px] h-[80px] justify-center items-center">
-            {myInfo[2].phoneNum}
-          </div>
-        </div>
+        <div className="flex border-b border-[#afafaf]"></div>
         <div className="flex items-center justify-center border-b border-[#afafaf]">
           <div className="flex justify-center items-center w-[100px] h-[80px]">
             비밀번호

@@ -7,7 +7,7 @@ function checkUserName(userName: string): boolean {
 }
 
 function checkUserId(userId: string): boolean {
-  const userIdRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const userIdRegex = /^[a-zA-Z0-9_]{4,20}$/;
   return userIdRegex.test(userId);
 }
 
@@ -44,7 +44,7 @@ export default async function signupUser(
   }
 
   if (!checkEmail(email)) {
-    throw new Error('전화번호는 10~11자리 숫자여야 합니다.');
+    throw new Error('올바른 이메일을 입력해주세요.');
   }
 
   if (!checkPassword(password)) {

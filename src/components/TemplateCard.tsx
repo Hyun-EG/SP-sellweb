@@ -62,6 +62,7 @@ const TemplateCard = ({
         <p className=" font-bold">{subscription}</p>
       </div>
       <div className="flex flex-col justify-evenly w-[20%]">
+        {/* 하트 아이콘 z인덱스 수정 */}
         <div className="h-[60%] relative -z-10">
           <div className="absolute top-0 bottom-[50px] right-[210px] w-px bg-gray-300"></div>
           <div onClick={() => setIsHeart(!isHeart)} className="cursor-pointer">
