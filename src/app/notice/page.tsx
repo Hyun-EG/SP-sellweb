@@ -21,7 +21,7 @@ export default function Notice() {
   ];
 
   return (
-    <div className="h-screen">
+    <div className="h-full">
       <TitleBox title="공지사항" />
       <Table
         headers={[
