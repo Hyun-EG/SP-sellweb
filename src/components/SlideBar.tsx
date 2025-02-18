@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 interface SlideBarProps {
   slideWidth: number;
@@ -14,8 +14,11 @@ const SlideBar = ({
   items = ['서비스 소개', '가격 정보', '리뷰'],
   slideWidth = 200,
   onTabChange,
+  activeIndex,
 }: SlideBarProps) => {
-  const [activeIconIndex, setActiveIconIndex] = useState<number | null>(null);
+  const [activeIconIndex, setActiveIconIndex] = useState<number | null>(
+    activeIndex
+  );
   const [slideOffset, setSlideOffset] = useState(0);
 
   const handleIconClick = (index: number) => {
@@ -45,7 +48,7 @@ const SlideBar = ({
   return (
     <div className="relative flex flex-col items-center w-full h-[100px]">
       <div className="flex justify-center items-center w-full border-b-[1px] border-gray-300 relative">
-        {activeIconIndex !== 0 && (
+        {activeIconIndex !== null && (
           <div
             className="absolute bottom-[-2px] h-[3px] bg-lightPurple transition-all duration-300"
             style={{ left: `${slideOffset}px`, width: `${slideWidth}px` }}
@@ -55,7 +58,7 @@ const SlideBar = ({
           {items.map((text, index) => (
             <div
               key={index}
-              className="nav-icon cursor-pointer flex justify-center items-center text-center text-sm transition-all font-bold"
+              className={`nav-icon cursor-pointer flex justify-center items-center text-center text-sm transition-all font-bold ${activeIconIndex === index ? 'text-lightPurple' : ''}`}
               style={{ width: `${slideWidth}px`, height: '100px' }}
               onClick={() => handleIconClick(index)}
             >
