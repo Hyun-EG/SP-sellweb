@@ -4,10 +4,15 @@ import { useEffect, useState } from 'react';
 import Table from '@/components/Table';
 import TitleBox from '@/components/TitleBox';
 
+interface Post {
+  _id: string;
+  title: string;
+  createdAt: string;
+}
+
 export default function Page() {
-  const [rows, setRows] = useState<
-    Array<{ _id: string; title: string; createdAt: string }>
-  >([]);
+  const [allRows, setAllRows] = useState<string[][]>([]);
+  const [rowIds, setRowIds] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -16,16 +21,21 @@ export default function Page() {
         if (!response.ok) {
           throw new Error('데이터를 가져올 수 없습니다.');
         }
-        const data = await response.json();
+        const data: Post[] = await response.json();
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const formattedRows = data.map((post: any) => ({
-          _id: post._id,
-          title: post.title,
-          createdAt: post.createdAt,
-        }));
+        const formattedRows = data.map((post, index) => {
+          const date = new Date(post.createdAt);
+          const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+            .toString()
+            .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
 
-        setRows(formattedRows);
+          return [String(index + 1), post.title, formattedDate];
+        });
+
+        const ids = data.map((post) => post._id);
+
+        setAllRows(formattedRows);
+        setRowIds(ids);
       } catch (error) {
         console.error(error);
       }
@@ -37,19 +47,18 @@ export default function Page() {
   return (
     <div className="h-screen">
       <TitleBox title="문의내역" />
-      <Table
-        headers={[
-          { label: '번호', width: '100px' },
-          { label: '제목', width: '900px' },
-          { label: '등록 날짜', width: '200px' },
-        ]}
-        rows={rows.map((row, index) => [
-          (index + 1).toString(),
-          row.title,
-          row.createdAt,
-        ])}
-        link="/mypage/ask/detail"
-      />
+      {allRows.length === rowIds.length && (
+        <Table
+          headers={[
+            { label: '번호', width: '100px' },
+            { label: '제목', width: '900px' },
+            { label: '등록 날짜', width: '200px' },
+          ]}
+          rows={allRows}
+          rowIds={rowIds}
+          link="/mypage/ask/detail"
+        />
+      )}
     </div>
   );
 }
