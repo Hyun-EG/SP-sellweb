@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { connectDB } from '../../../../../lib/db';
-import Notice from '../../../../../models/Notice';
+import { connectDB } from '../../../../lib/db';
+import Notice from '../../../../models/Notice';
 
 export async function GET() {
   try {
