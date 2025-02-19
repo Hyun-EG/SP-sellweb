@@ -40,11 +40,19 @@ export default function NoticeDetail() {
   }, [id]);
 
   if (loading) {
-    return <div className="text-center">공지사항을 불러오는 중...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen text-[40px]">
+        Loading...
+      </div>
+    );
   }
 
   if (!notice) {
-    return <div className="text-center">공지사항을 찾을 수 없습니다.</div>;
+    return (
+      <div className="flex justify-center items-center h-screen text-[40px]">
+        공지사항을 찾을 수 없습니다.
+      </div>
+    );
   }
 
   return (
