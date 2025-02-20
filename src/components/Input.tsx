@@ -1,22 +1,18 @@
-'use client';
+import React, { useState, KeyboardEventHandler } from 'react';
 
-import React, { useState } from 'react';
-
-type InputState = 'sucess' | 'danger' | 'focus' | 'default';
-
-type InputProps = {
-  children?: React.ReactNode;
+interface InputProps {
   placeholder?: string;
-  state?: InputState;
-  width?: string | number;
-  height?: string | number;
-  borderRadius?: string | number;
+  width?: number;
+  height?: number;
+  borderRadius?: number;
+  state?: string;
   value?: string;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
   required?: boolean;
   type?: string;
-  // eslint-disable-next-line no-unused-vars
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
+  onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+  children?: React.ReactNode;
+}
 
 const Input = ({
   placeholder,
@@ -27,6 +23,8 @@ const Input = ({
   onChange,
   required,
   type,
+  onKeyDown,
+  children,
 }: InputProps) => {
   const [isFocus, setIsFocus] = useState(false);
 
@@ -37,19 +35,25 @@ const Input = ({
   };
 
   return (
-    <input
-      type={type}
-      style={inputStyle}
-      placeholder={placeholder}
-      value={value}
-      onChange={onChange}
-      onFocus={() => setIsFocus(true)}
-      onBlur={() => setIsFocus(false)}
-      className={`p-2 outline-none transition-colors ${
-        isFocus ? 'border-2 border-lightPurple' : 'border-2 border-neutralGray'
-      }`}
-      required={required}
-    />
+    <div>
+      <input
+        type={type}
+        style={inputStyle}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        onFocus={() => setIsFocus(true)}
+        onBlur={() => setIsFocus(false)}
+        className={`p-2 outline-none transition-colors ${
+          isFocus
+            ? 'border-2 border-lightPurple'
+            : 'border-2 border-neutralGray'
+        }`}
+        required={required}
+        onKeyDown={onKeyDown}
+      />
+      {children}
+    </div>
   );
 };
 

@@ -1,13 +1,15 @@
 'use client';
 
+import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import Image from 'next/image';
 import Input from '@/components/Input';
 import Button from '@/components/Button';
+import UserAuth from '@/components/UserAuth';
 import backGroundImg from '../../../public/bgs/bg-seeMySelf.webp';
 import kakaoIcon from '../../../public/svgs/icon-kakao.svg';
 import googleIcon from '../../../public/svgs/icon-google.svg';
-import UserAuth from '@/components/UserAuth';
+import Cookie from 'js-cookie';
 
 const Page = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -15,15 +17,25 @@ const Page = () => {
   const [userName, setUserName] = useState('');
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
-  const [code, setCode] = useState('');
+  const [, setCode] = useState('');
 
-  const handleSubmit = async () => {
+  // Google 로그인
+  const handleGoogleLogin = () => {
+    signIn('google', { callbackUrl: '/' });
+  };
+
+  // Kakao 로그인
+  const handleKakaoLogin = () => {
+    signIn('kakao', { callbackUrl: '/' });
+  };
+
+  // 직접 웹 로그인
+  const handleWebLogin = async () => {
     const formData = {
       userName,
       userId,
       password,
       email,
-      code,
     };
 
     try {
@@ -38,12 +50,19 @@ const Page = () => {
       const result = await response.json();
 
       if (response.ok) {
+        const { accessToken, refreshToken } = result;
+        Cookie.set('accessToken', accessToken, { expires: 1, path: '/' });
+        Cookie.set('refreshToken', refreshToken, {
+          expires: 7,
+          path: '/',
+          httpOnly: true,
+        });
+
         alert('회원가입 성공!');
         setUserId('');
         setUserName('');
         setPassword('');
         setEmail('');
-        setCode('');
       } else {
         alert(`회원가입 실패: ${result.message}`);
       }
@@ -66,7 +85,7 @@ const Page = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ to: email, code: generatedCode }),
+        body: JSON.stringify({ userId, email }),
       });
 
       if (!response.ok) {
@@ -75,13 +94,13 @@ const Page = () => {
 
       const data = await response.json();
 
-      if (data.message === '이메일 발송 성공') {
+      if (data.message === '인증번호가 이메일로 전송되었습니다.') {
         alert('인증 코드가 이메일로 발송되었습니다.');
       } else {
         alert('이메일 발송에 실패했습니다.');
       }
     } catch (error) {
-      console.error('에러 발생', error);
+      console.error('에러 발생:', error);
       alert('이메일 발송에 실패했습니다.');
     }
   };
@@ -183,7 +202,7 @@ const Page = () => {
             height={48}
             theme="white"
             state="default"
-            onClick={handleSubmit}
+            onClick={handleWebLogin}
           >
             회원가입
           </Button>
@@ -194,6 +213,7 @@ const Page = () => {
             color="#ffffff"
             fontColor="#000000"
             state="default"
+            onClick={handleGoogleLogin}
           >
             <div className="flex items-center justify-center gap-4 w-full h-full ">
               <Image
@@ -212,6 +232,7 @@ const Page = () => {
             color="#ffea00"
             fontColor="#000000"
             state="default"
+            onClick={handleKakaoLogin}
           >
             <div className="flex items-center justify-center gap-3 w-full h-full">
               <Image
