@@ -1,24 +1,44 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Table from '@/components/Table';
 import TitleBox from '@/components/TitleBox';
 
+interface Notice {
+  _id: string;
+  title: string;
+  createdAt: string;
+}
+
 export default function Notice() {
-  const rows = [
-    ['1', '공지사항입니다', '2024.09.01'],
-    ['1', '공지사항입니다', '2024.09.01'],
-    ['1', '공지사항입니다', '2024.09.01'],
-    ['1', '공지사항입니다', '2024.09.01'],
-    ['1', '공지사항입니다', '2024.09.01'],
-    ['1', '공지사항입니다', '2024.09.01'],
-    ['1', '공지사항입니다', '2024.09.01'],
-    ['1', '공지사항입니다', '2024.09.01'],
-    ['1', '공지사항입니다', '2024.09.01'],
-    ['1', '공지사항입니다', '2024.09.01'],
-    ['1', '공지사항입니다', '2024.09.01'],
-    ['1', '공지사항입니다', '2024.09.01'],
-    ['1', '공지사항입니다', '2024.09.01'],
-    ['1', '공지사항입니다', '2024.09.01'],
-    ['1', '공지사항입니다', '2024.09.01'],
-  ];
+  const [allRows, setAllRows] = useState<string[][]>([]);
+  const [rowIds, setRowIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchNotices = async () => {
+      try {
+        const response = await fetch('/api/get-notice');
+        const data: Notice[] = await response.json();
+        const formattedRows = data.map((item, index) => {
+          const date = new Date(item.createdAt);
+          const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+            .toString()
+            .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+
+          return [String(index + 1), item.title, formattedDate];
+        });
+
+        const ids = data.map((item) => item._id);
+
+        setAllRows(formattedRows);
+        setRowIds(ids);
+      } catch (error) {
+        console.error('공지사항 가져오기 실패', error);
+      }
+    };
+
+    fetchNotices();
+  }, []);
 
   return (
     <div className="h-full">
@@ -29,8 +49,9 @@ export default function Notice() {
           { label: '제목', width: '900px' },
           { label: '등록 날짜', width: '200px' },
         ]}
-        rows={rows}
-        link="/notice/detail"
+        rows={allRows}
+        rowIds={rowIds}
+        link="/notice"
       />
     </div>
   );

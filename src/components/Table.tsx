@@ -8,14 +8,15 @@ import Link from 'next/link';
 export default function Table({
   headers,
   rows,
+  rowIds,
   link,
 }: {
   headers: { label: string; width: string }[];
   rows: string[][];
+  rowIds: string[];
   link: string;
 }) {
   const [curPageShowData, setCurPageShowData] = useState<string[][]>([]);
-
   const param = usePathname();
 
   return (
@@ -25,34 +26,37 @@ export default function Table({
           {headers.map((header, index) => (
             <div
               key={index}
-              className={`flex justify-center items-center ${
-                index !== headers.length - 1 ? 'border-r border-[#afafaf]' : ''
-              }`}
+              className={`flex justify-center items-center ${index !== headers.length - 1 ? 'border-r border-[#afafaf]' : ''}`}
               style={{ width: header.width }}
             >
               {header.label}
             </div>
           ))}
         </div>
-        {curPageShowData.map((row, index) => (
-          <div key={index} className="h-[60px] flex border-b border-[#afafaf]">
-            {row.map((cell, index) => (
+        {curPageShowData.map((row, rowIndex) => (
+          <div
+            key={rowIndex}
+            className="h-[60px] flex border-b border-[#afafaf]"
+          >
+            {row.map((cell, cellIndex) => (
               <div
-                key={index}
+                key={cellIndex}
                 className="flex justify-center items-center"
-                style={{ width: headers[index]?.width }}
+                style={{ width: headers[cellIndex]?.width }}
               >
-                <Link href={`${link}/${row[0]}`}>{cell}</Link>
+                {cellIndex === 1 ? (
+                  <Link href={`${link}/${rowIds[rowIndex]}`}>{cell}</Link>
+                ) : (
+                  cell
+                )}
               </div>
             ))}
           </div>
         ))}
       </div>
-      <div>
-        {param !== '/mypage/bought/detail' && (
-          <Pagination data={rows} setCurPageShowData={setCurPageShowData} />
-        )}
-      </div>
+      {param !== '/mypage/bought/detail' && (
+        <Pagination data={rows} setCurPageShowData={setCurPageShowData} />
+      )}
     </div>
   );
 }
