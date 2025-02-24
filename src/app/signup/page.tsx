@@ -17,7 +17,6 @@ const Page = () => {
   const [userName, setUserName] = useState('');
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
-  const [, setCode] = useState('');
 
   // Google 로그인
   const handleGoogleLogin = () => {
@@ -72,20 +71,14 @@ const Page = () => {
     }
   };
 
-  // 이메일 인증
   const handleSendEmail = async () => {
-    const generatedCode = Math.floor(
-      100000 + Math.random() * 900000
-    ).toString();
-    setCode(generatedCode);
-
     try {
       const response = await fetch('/api/auth/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId, email }),
+        body: JSON.stringify({ email }),
       });
 
       if (!response.ok) {
