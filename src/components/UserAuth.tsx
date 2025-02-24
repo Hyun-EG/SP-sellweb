@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Input from './Input';
 import Button from './Button';
 import SlideBar from './SlideBar';
-
+import { signIn } from 'next-auth/react';
+import Image from 'next/image';
+import googleIcon from '../../public/svgs/icon-google.svg';
+import kakaoIcon from '../../public/svgs/icon-kakao.svg';
 interface UserAuthProps {
   onClose: () => void;
 }
@@ -11,22 +14,17 @@ const UserAuth = ({ onClose }: UserAuthProps) => {
   const [activeTab, setActiveTab] = useState<number>(0);
 
   useEffect(() => {
-    // 로그인 탭 변경 시 입력 값 초기화
     if (activeTab !== 0) {
       setUserId('');
       setPassword('');
       setLoginError(null);
     }
-
-    // 아이디 찾기 탭 변경 시 입력 값 초기화
     if (activeTab !== 1) {
       setUserName('');
       setEmail('');
       setFindIDError(null);
       setFoundID(null);
     }
-
-    // 비밀번호 찾기 탭 변경 시 입력 값 초기화
     if (activeTab !== 2) {
       setResetUserId('');
       setResetEmail('');
@@ -38,18 +36,18 @@ const UserAuth = ({ onClose }: UserAuthProps) => {
     }
   }, [activeTab]);
 
-  // 로그인
+  // 로그인 상태
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState<string | null>(null);
 
-  // 아이디 찾기
+  // 아이디 찾기 상태
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [foundID, setFoundID] = useState<string | null>(null);
   const [findIDError, setFindIDError] = useState<string | null>(null);
 
-  // 비밀번호 찾기
+  // 비밀번호 찾기 상태
   const [resetUserId, setResetUserId] = useState('');
   const [resetEmail, setResetEmail] = useState('');
   const [resetError, setResetError] = useState<string | null>(null);
@@ -58,28 +56,40 @@ const UserAuth = ({ onClose }: UserAuthProps) => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  // 로그인 처리 (next-auth 사용)
   const handleLogin = async () => {
     setLoginError(null);
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, password }),
-      });
+    const res = await signIn('credentials', {
+      redirect: false,
+      username: userId,
+      password: password,
+    });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        setLoginError(data.message);
-        return;
-      }
-
-      sessionStorage.setItem('token', data.token);
-      alert('로그인 성공!');
-      onClose();
-    } catch {
-      setLoginError('서버 오류가 발생했습니다.');
+    if (res?.error) {
+      setLoginError(res.error);
+      return;
     }
+    onClose();
+  };
+
+  const handleLoginKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleLogin();
+    }
+  };
+
+  const handleFindIdKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleFindID();
+    }
+  };
+
+  const handleGoogleLogin = () => {
+    signIn('google', { callbackUrl: '/' });
+  };
+
+  const handleKakaoLogin = () => {
+    signIn('kakao', { callbackUrl: '/' });
   };
 
   const handleFindID = async () => {
@@ -125,6 +135,12 @@ const UserAuth = ({ onClose }: UserAuthProps) => {
       alert('이메일로 인증번호가 발송되었습니다.');
     } catch {
       setResetError('서버 오류가 발생했습니다.');
+    }
+  };
+
+  const handleFindPassWordKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleFindPassword();
     }
   };
 
@@ -206,11 +222,40 @@ const UserAuth = ({ onClose }: UserAuthProps) => {
           onChange={(e) => setPassword(e.target.value)}
           width={240}
           height={50}
+          onKeyDown={handleLoginKeyDown}
         />
         <Button theme="white" onClick={handleLogin} width={100} height={50}>
           로그인
         </Button>
       </div>
+      <Button
+        width={360}
+        height={48}
+        theme="white"
+        color="#ffffff"
+        fontColor="#000000"
+        state="default"
+        onClick={handleGoogleLogin}
+      >
+        <div className="flex items-center justify-center gap-4 w-full h-full ">
+          <Image src={googleIcon} alt="구글 로그인" width={26} height={26} />
+          <span>구글 로그인</span>
+        </div>
+      </Button>
+      <Button
+        width={360}
+        height={48}
+        theme="white"
+        color="#ffea00"
+        fontColor="#000000"
+        state="default"
+        onClick={handleKakaoLogin}
+      >
+        <div className="flex items-center justify-center gap-3 w-full h-full">
+          <Image src={kakaoIcon} alt="카카오톡 로그인" width={26} height={26} />
+          <span>카카오톡 로그인</span>
+        </div>
+      </Button>
       {loginError && <p className=" text-red-500">{loginError}</p>}
     </div>
   );
@@ -233,6 +278,7 @@ const UserAuth = ({ onClose }: UserAuthProps) => {
         height={50}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        onKeyDown={handleFindIdKeyDown}
       />
       {findIDError && <p className="text-red-500">{findIDError}</p>}
       {foundID && <p className="text-green-500">아이디: {foundID}</p>}
@@ -261,6 +307,7 @@ const UserAuth = ({ onClose }: UserAuthProps) => {
           height={50}
           value={resetEmail}
           onChange={(e) => setResetEmail(e.target.value)}
+          onKeyDown={handleFindPassWordKeyDown}
         />
         <Button
           theme="white"
@@ -291,6 +338,7 @@ const UserAuth = ({ onClose }: UserAuthProps) => {
       {resetError && <p className="text-red-500">{resetError}</p>}
     </div>
   );
+
   const resetPasswordForm = (
     <div className="flex flex-col items-center gap-6">
       <h2 className="text-lg font-semibold mb-2">새 비밀번호를 입력하세요.</h2>
