@@ -53,20 +53,14 @@ const Page = () => {
     }
   };
 
-  // 이메일 인증
   const handleSendEmail = async () => {
-    const generatedCode = Math.floor(
-      100000 + Math.random() * 900000
-    ).toString();
-    setCode(generatedCode);
-
     try {
       const response = await fetch('/api/auth/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ to: email, code: generatedCode }),
+        body: JSON.stringify({ email }),
       });
 
       if (!response.ok) {
