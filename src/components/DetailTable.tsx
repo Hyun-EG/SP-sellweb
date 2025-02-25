@@ -22,9 +22,15 @@ export default function DetailTable({
         </div>
         <div className="h-[60px] flex justify-start">{date}</div>
       </div>
-      <div className="h-[500px]">
+      <div className="h-[300px]">
         <div className="w-[1200px] h-[500px]">{content}</div>
       </div>
+      {path.startsWith('/mypage/ask/') && (
+        <div className="h-[200px] p-[20px] border border-b-0 border-[#afafaf]">
+          답변자리
+        </div>
+      )}
+
       <div className="h-[100px] border-y border-[#afafaf]">
         <div className="h-[50px] flex border-b border-[#afafaf]">
           <div className="w-[200px] flex justify-center items-center border-r border-[#afafaf]">

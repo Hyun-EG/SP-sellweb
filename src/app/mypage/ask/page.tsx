@@ -56,7 +56,7 @@ export default function Page() {
           ]}
           rows={allRows}
           rowIds={rowIds}
-          link="/mypage/ask/detail"
+          link="/mypage/ask"
         />
       )}
     </div>
