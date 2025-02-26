@@ -12,7 +12,7 @@ import arrowDown from '../../public/svgs/icon-arrowDown.svg';
 
 const NavBar = () => {
   const { data: session } = useSession();
-  const userName = session?.user?.name || '사용자'; // 사용자 이름을 세션에서 가져옴
+  const userName = session?.user?.name || '사용자';
   const [isClick, setIsClick] = useState<string | false>(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -56,7 +56,6 @@ const NavBar = () => {
 
   const handleLogout = async () => {
     await signOut({ redirect: false });
-    sessionStorage.removeItem('accessToken');
   };
 
   useEffect(() => {

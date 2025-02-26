@@ -34,9 +34,10 @@ export default function Table({
           ))}
         </div>
         {curPageShowData.map((row, rowIndex) => (
-          <div
+          <Link
             key={rowIndex}
-            className="h-[60px] flex border-b border-[#afafaf]"
+            href={`${link}/${rowIds[rowIndex]}`}
+            className="h-[60px] flex border-b border-[#afafaf] cursor-pointer hover:bg-gray-100"
           >
             {row.map((cell, cellIndex) => (
               <div
@@ -44,14 +45,10 @@ export default function Table({
                 className="flex justify-center items-center"
                 style={{ width: headers[cellIndex]?.width }}
               >
-                {cellIndex === 1 ? (
-                  <Link href={`${link}/${rowIds[rowIndex]}`}>{cell}</Link>
-                ) : (
-                  cell
-                )}
+                {cell}
               </div>
             ))}
-          </div>
+          </Link>
         ))}
       </div>
       {param !== '/mypage/bought/detail' && (
