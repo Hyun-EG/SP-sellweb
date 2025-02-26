@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, KeyboardEventHandler } from 'react';
 
 interface InputProps {
