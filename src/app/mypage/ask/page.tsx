@@ -5,6 +5,7 @@ import Table from '@/components/Table';
 import TitleBox from '@/components/TitleBox';
 
 interface Post {
+  userName: string;
   _id: string;
   title: string;
   createdAt: string;
@@ -23,13 +24,13 @@ export default function Page() {
         }
         const data: Post[] = await response.json();
 
-        const formattedRows = data.map((post, index) => {
+        const formattedRows = data.map((post) => {
           const date = new Date(post.createdAt);
           const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
             .toString()
             .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
 
-          return [String(index + 1), post.title, formattedDate];
+          return [post.userName, post.title, formattedDate];
         });
 
         const ids = data.map((post) => post._id);
@@ -50,7 +51,7 @@ export default function Page() {
       {allRows.length === rowIds.length && (
         <Table
           headers={[
-            { label: '번호', width: '100px' },
+            { label: '이름', width: '100px' },
             { label: '제목', width: '900px' },
             { label: '등록 날짜', width: '200px' },
           ]}
