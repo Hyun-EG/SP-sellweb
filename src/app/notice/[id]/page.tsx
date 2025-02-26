@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import DetailTable from '@/components/DetailTable';
 import TitleBox from '@/components/TitleBox';
 
@@ -15,7 +15,24 @@ interface Notice {
 export default function NoticeDetail() {
   const { id } = useParams();
   const [notice, setNotice] = useState<Notice | null>(null);
+  const [allNotices, setAllNotices] = useState<Notice[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchNotices = async () => {
+      try {
+        const response = await fetch('/api/get-notice');
+        const data: Notice[] = await response.json();
+        setAllNotices(data);
+      } catch (error) {
+        console.error('공지사항 목록 불러오기 실패:', error);
+      }
+    };
+
+    fetchNotices();
+  }, []);
 
   useEffect(() => {
     const fetchNoticeDetail = async () => {
@@ -55,6 +72,11 @@ export default function NoticeDetail() {
     );
   }
 
+  const currentIndex = allNotices.findIndex((item) => item._id === notice._id);
+
+  const previousNotice = allNotices[currentIndex - 1];
+  const nextNotice = allNotices[currentIndex + 1];
+
   return (
     <div>
       <TitleBox title="공지 사항" />
@@ -62,6 +84,12 @@ export default function NoticeDetail() {
         title={notice.title}
         date={notice.createdAt}
         content={notice.content}
+        previousPost={previousNotice}
+        nextPost={nextNotice}
+        onClick={() => {
+          router.push('/notice');
+        }}
+        isNotice={true}
       />
     </div>
   );
