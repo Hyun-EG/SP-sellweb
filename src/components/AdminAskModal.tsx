@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import Input from './Input';
+import Textarea from './Textarea';
+import Button from './Button';
 
 interface AdminAskModalProps {
   postId: string;
@@ -51,9 +52,17 @@ export default function AdminAskModal({ postId, onClick }: AdminAskModalProps) {
             </div>
             <div className="w-full h-[50%] p-[20px]">{postDetail.content}</div>
             <div className="w-full h-[50%] ">
-              <div className="h-[50%]">글구간</div>
-              <div className="h-[50%]">
-                <Input />
+              <div className="h-[55%] flex justify-center items-center">
+                <Textarea width="[100%]" height="[100%]" />
+                <Button
+                  theme="white"
+                  width={80}
+                  height={175}
+                  color="#566270 "
+                  state="default"
+                >
+                  완료
+                </Button>
               </div>
             </div>
           </div>
