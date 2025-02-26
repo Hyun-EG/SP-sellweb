@@ -12,10 +12,10 @@ import arrowDown from '../../public/svgs/icon-arrowDown.svg';
 
 const NavBar = () => {
   const { data: session } = useSession();
-  const userName = session?.user?.name || '사용자';
   const [isClick, setIsClick] = useState<string | false>(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const userName = session?.user?.name || '사용자';
 
   const templateItems = [
     { label: '템플릿 소개', href: '/temp' },

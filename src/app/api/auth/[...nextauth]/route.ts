@@ -1,22 +1,26 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import KakaoProvider from 'next-auth/providers/kakao';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import bcrypt from 'bcryptjs';
+import { connectDB } from '../../../../../lib/db';
+import User from '../../../../../models/User';
 
 export const authOptions = {
   cookies: {
     sessionToken: {
       name: `next-auth.session-token`,
       options: {
-        httpOnly: true, // 클라이언트에서 직접 접근할 수 없도록 설정
-        secure: process.env.NODE_ENV === 'production', // 프로덕션 환경에서만 https 사용
-        sameSite: 'lax', // 사이트 간 쿠키 전송 제한 설정
-        path: '/', // 모든 경로에서 유효한 쿠키로 설정
-        maxAge: 30 * 24 * 60 * 60, // 쿠키 만료 시간 (30일)
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 30 * 24 * 60 * 60, // 30일
       },
     },
   },
   session: {
-    strategy: 'jwt', // 세션 관리 방법 (JWT 사용)
+    strategy: 'jwt' as 'jwt' | 'database',
   },
   providers: [
     GoogleProvider({
@@ -27,31 +31,55 @@ export const authOptions = {
       clientId: process.env.KAKAO_CLIENT_ID!,
       clientSecret: process.env.KAKAO_CLIENT_SECRET!,
     }),
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        username: { label: '이름', type: 'text' },
+        password: { label: '비밀번호', type: 'password' },
+      },
+      async authorize(credentials) {
+        try {
+          await connectDB();
+
+          const user = await User.findOne({ userId: credentials?.username });
+          if (!user) {
+            throw new Error('아이디 또는 비밀번호를 확인해주세요.');
+          }
+
+          const isValidPassword = await bcrypt.compare(
+            credentials?.password || '',
+            user.password
+          );
+          if (!isValidPassword) {
+            throw new Error('아이디 또는 비밀번호를 확인해주세요.');
+          }
+
+          return {
+            id: user._id.toString(),
+            name: user.userName,
+            email: user.email,
+          };
+        } catch (error) {
+          throw new Error(
+            error instanceof Error ? error.message : String(error)
+          );
+        }
+      },
+    }),
   ],
   callbacks: {
-    async signIn({}) {
-      // 로그인 후 user 정보가 제대로 세션에 반영되도록 처리
-      return true;
-    },
     async jwt({
       token,
       user,
       account,
     }: {
       token: Record<string, unknown>;
-      user?: {
-        id: string;
-        name: string;
-      };
-      account?: {
-        provider: string;
-        access_token: string;
-      };
+      user?: { id: string; name: string; email: string };
+      account?: { access_token?: string; provider?: string };
     }) {
-      // 로그인 후 유저 정보(예: 이름)를 토큰에 추가
       if (user) {
         token.userId = user.id;
-        token.userName = user.name; // 이름을 토큰에 담기
+        token.userName = user.name;
       }
       if (account) {
         token.accessToken = account.access_token;
@@ -73,17 +101,16 @@ export const authOptions = {
       };
       token: Record<string, unknown>;
     }) {
-      // 세션에 사용자 정보 추가
       if (token) {
-        session.user.userId = token.userId as string; // 유저 ID
-        session.user.name = token.userName as string; // 유저 이름
+        session.user.userId = token.userId as string;
+        session.user.name = token.userName as string;
         session.user.accessToken = token.accessToken as string;
         session.user.provider = token.provider as string;
       }
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET, // NextAuth secret key
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 const handler = NextAuth(authOptions);
