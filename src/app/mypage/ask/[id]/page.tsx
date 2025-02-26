@@ -3,7 +3,7 @@
 import DetailTable from '@/components/DetailTable';
 import TitleBox from '@/components/TitleBox';
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 interface PostType {
   title: string;
@@ -14,6 +14,7 @@ interface PostType {
 export default function Page() {
   const [post, setPost] = useState<PostType | null>(null);
   const { id } = useParams();
+  const router = useRouter();
 
   useEffect(() => {
     const getPost = async () => {
@@ -43,6 +44,9 @@ export default function Page() {
           title={post.title}
           date={post.createdAt}
           content={post.content}
+          onClick={() => {
+            router.push('/mypage/ask');
+          }}
         />
       ) : (
         <p className="flex justify-center items-center h-screen text-[40px]">
