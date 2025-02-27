@@ -5,6 +5,7 @@ const PostSchema = new mongoose.Schema({
   userName: { type: String, required: true },
   title: { type: String, required: true },
   content: { type: String, required: true },
+  reply: { type: String, default: '' },
   createdAt: { type: Date, default: Date.now },
 });
 
