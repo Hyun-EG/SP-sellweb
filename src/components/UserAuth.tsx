@@ -59,13 +59,16 @@ const UserAuth = ({ onClose }: UserAuthProps) => {
   // 로그인 처리 (next-auth 사용)
   const handleLogin = async () => {
     setLoginError(null);
+
+    // 로그인 시 인증 요청
     const res = await signIn('credentials', {
       redirect: false,
-      username: userId,
+      userid: userId,
       password: password,
     });
 
     if (res?.error) {
+      console.log(res.error);
       setLoginError(res.error);
       return;
     }

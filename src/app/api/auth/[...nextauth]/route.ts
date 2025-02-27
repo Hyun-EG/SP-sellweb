@@ -1,22 +1,26 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import KakaoProvider from 'next-auth/providers/kakao';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import bcrypt from 'bcryptjs';
+import { connectDB } from '../../../../../lib/db';
+import User from '../../../../../models/User';
 
 export const authOptions = {
   cookies: {
     sessionToken: {
       name: `next-auth.session-token`,
       options: {
-        httpOnly: true, // 클라이언트에서 직접 접근할 수 없도록 설정
-        secure: process.env.NODE_ENV === 'production', // 프로덕션 환경에서만 https 사용
-        sameSite: 'lax', // 사이트 간 쿠키 전송 제한 설정
-        path: '/', // 모든 경로에서 유효한 쿠키로 설정
-        maxAge: 30 * 24 * 60 * 60, // 쿠키 만료 시간 (30일)
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 30 * 24 * 60 * 60, // 30일
       },
     },
   },
   session: {
-    strategy: 'jwt', // 세션 관리 방법 (JWT 사용)
+    strategy: 'jwt' as 'jwt' | 'database',
   },
   providers: [
     GoogleProvider({
@@ -27,35 +31,74 @@ export const authOptions = {
       clientId: process.env.KAKAO_CLIENT_ID!,
       clientSecret: process.env.KAKAO_CLIENT_SECRET!,
     }),
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        username: { label: 'userName', type: 'text' },
+        password: { label: 'password', type: 'password' },
+      },
+      async authorize(credentials) {
+        try {
+          await connectDB();
+
+          // 유저를 찾고, 'userName'과 'email'을 포함한 유저 객체 반환
+          const user = await User.findOne({ userId: credentials?.userid });
+          if (!user) {
+            throw new Error('아이디 또는 비밀번호를 확인해주세요.');
+          }
+
+          // 비밀번호 비교
+          const isValidPassword = await bcrypt.compare(
+            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+            credentials?.password!,
+            user.password
+          );
+          if (!isValidPassword) {
+            throw new Error('아이디 또는 비밀번호를 확인해주세요.');
+          }
+
+          // 유저 정보를 반환, 'userName'을 'name'으로 반환유저 객체를 출력하여 'userName'이 있는지 확인
+          return {
+            id: user._id.toString(),
+            userId: user.userId,
+            name: user.userName, // 'userName'을 'name'으로 반환
+            email: user.email,
+            provider: 'credentials',
+          };
+        } catch (error) {
+          console.error(error); // 에러 발생 시 로그 출력
+          if (error instanceof Error) {
+            throw new Error(error.message || '로그인 중 오류가 발생했습니다.');
+          } else {
+            throw new Error('로그인 중 오류가 발생했습니다.');
+          }
+        }
+      },
+    }),
   ],
   callbacks: {
-    async signIn({}) {
-      // 로그인 후 user 정보가 제대로 세션에 반영되도록 처리
-      return true;
-    },
     async jwt({
       token,
       user,
       account,
+      profile,
     }: {
       token: Record<string, unknown>;
-      user?: {
-        id: string;
-        name: string;
-      };
-      account?: {
-        provider: string;
-        access_token: string;
-      };
+      user?: { id: string; name: string; email: string };
+      account?: { access_token?: string; provider?: string };
+      profile?: { name?: string; email?: string };
     }) {
-      // 로그인 후 유저 정보(예: 이름)를 토큰에 추가
+      // 로그인 시 'name'을 토큰에 추가
       if (user) {
         token.userId = user.id;
-        token.userName = user.name; // 이름을 토큰에 담기
+        token.userName = user.name; // 'name'을 token에 저장
       }
       if (account) {
         token.accessToken = account.access_token;
-        token.provider = account.provider;
+        token.provider = account.provider; // 'provider'를 토큰에 저장
+      }
+      if (profile && profile.name) {
+        token.name = profile.name; // profile에서 제공된 'name'을 token에 저장
       }
       return token;
     },
@@ -73,17 +116,17 @@ export const authOptions = {
       };
       token: Record<string, unknown>;
     }) {
-      // 세션에 사용자 정보 추가
       if (token) {
-        session.user.userId = token.userId as string; // 유저 ID
-        session.user.name = token.userName as string; // 유저 이름
+        session.user.userId = token.userId as string;
+        session.user.name =
+          (token.userName as string) || (token.name as string);
         session.user.accessToken = token.accessToken as string;
         session.user.provider = token.provider as string;
       }
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET, // NextAuth secret key
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 const handler = NextAuth(authOptions);
