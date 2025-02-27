@@ -18,7 +18,7 @@ export default function AdminAsk() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await fetch('/api/get-posts');
+        const res = await fetch('/api/get-posts?unanswered=true');
         const data = await res.json();
         setPosts(data);
       } catch (error) {

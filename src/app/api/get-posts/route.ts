@@ -2,11 +2,16 @@ import { NextResponse } from 'next/server';
 import { connectDB } from '../../../../lib/db';
 import Post from '../../../../models/Post';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     await connectDB();
 
-    const posts = await Post.find({})
+    const { searchParams } = new URL(request.url);
+    const showUnanswered = searchParams.get('unanswered') === 'true';
+
+    const filter = showUnanswered ? { reply: { $exists: false } } : {};
+
+    const posts = await Post.find(filter)
       .select('title createdAt userName _id')
       .sort({ createdAt: 1 });
 

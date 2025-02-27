@@ -1,39 +1,29 @@
 'use client';
 
-import DetailTable from '@/components/DetailTable';
-import TitleBox from '@/components/TitleBox';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import TitleBox from '@/components/TitleBox';
+import DetailTable from '@/components/DetailTable';
 
-interface PostType {
+interface PostDetail {
   title: string;
   content: string;
   createdAt: string;
+  reply: string;
 }
 
-export default function Page() {
-  const [post, setPost] = useState<PostType | null>(null);
+export default function AskDetailPage() {
   const { id } = useParams();
   const router = useRouter();
+  const [post, setPost] = useState<PostDetail | null>(null);
 
   useEffect(() => {
-    const getPost = async () => {
-      try {
-        const response = await fetch(`/api/get-posts/${id}`);
-        if (!response.ok) {
-          throw new Error('데이터를 불러오지 못했습니다.');
-        }
-
-        const data = await response.json();
-        setPost(data);
-      } catch (error) {
-        console.error('데이터 불러오다가 에러남', error);
-      }
+    const fetchPost = async () => {
+      const res = await fetch(`/api/posts/${id}`);
+      const data = await res.json();
+      setPost(data);
     };
-
-    if (id) {
-      getPost();
-    }
+    fetchPost();
   }, [id]);
 
   return (
@@ -44,9 +34,8 @@ export default function Page() {
           title={post.title}
           date={post.createdAt}
           content={post.content}
-          onClick={() => {
-            router.push('/mypage/ask');
-          }}
+          reply={post.reply}
+          onClick={() => router.push('/mypage/ask')}
         />
       ) : (
         <p className="flex justify-center items-center h-screen text-[40px]">

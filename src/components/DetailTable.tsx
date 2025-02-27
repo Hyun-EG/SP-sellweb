@@ -7,6 +7,7 @@ interface DetailTableProps {
   title: string;
   date: string;
   content: string;
+  reply?: string;
   onClick?: () => void;
   isNotice?: boolean;
   previousPost?: Post | Notice | null;
@@ -29,6 +30,7 @@ export default function DetailTable({
   title,
   date,
   content,
+  reply,
   onClick,
   isNotice = false,
 }: DetailTableProps) {
@@ -122,9 +124,11 @@ export default function DetailTable({
       <div className="h-[300px]">
         <div className="w-[1200px] h-[500px]">{content}</div>
       </div>
+
       {path.startsWith('/mypage/ask/') && !isNotice && (
         <div className="h-[200px] p-[20px] border border-b-0 border-[#afafaf]">
-          답변자리
+          <div className="font-bold mb-2">관리자 답변</div>
+          <div>{reply || '아직 답변이 없습니다.'}</div>
         </div>
       )}
 
