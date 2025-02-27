@@ -34,35 +34,44 @@ export const authOptions = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        username: { label: '이름', type: 'text' },
-        password: { label: '비밀번호', type: 'password' },
+        username: { label: 'userName', type: 'text' },
+        password: { label: 'password', type: 'password' },
       },
       async authorize(credentials) {
         try {
           await connectDB();
 
-          const user = await User.findOne({ userId: credentials?.username });
+          // 유저를 찾고, 'userName'과 'email'을 포함한 유저 객체 반환
+          const user = await User.findOne({ userId: credentials?.userid });
           if (!user) {
             throw new Error('아이디 또는 비밀번호를 확인해주세요.');
           }
 
+          // 비밀번호 비교
           const isValidPassword = await bcrypt.compare(
-            credentials?.password || '',
+            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+            credentials?.password!,
             user.password
           );
           if (!isValidPassword) {
             throw new Error('아이디 또는 비밀번호를 확인해주세요.');
           }
 
+          // 유저 정보를 반환, 'userName'을 'name'으로 반환유저 객체를 출력하여 'userName'이 있는지 확인
           return {
             id: user._id.toString(),
-            name: user.userName,
+            userId: user.userId,
+            name: user.userName, // 'userName'을 'name'으로 반환
             email: user.email,
+            provider: 'credentials',
           };
         } catch (error) {
-          throw new Error(
-            error instanceof Error ? error.message : String(error)
-          );
+          console.error(error); // 에러 발생 시 로그 출력
+          if (error instanceof Error) {
+            throw new Error(error.message || '로그인 중 오류가 발생했습니다.');
+          } else {
+            throw new Error('로그인 중 오류가 발생했습니다.');
+          }
         }
       },
     }),
@@ -72,18 +81,24 @@ export const authOptions = {
       token,
       user,
       account,
+      profile,
     }: {
       token: Record<string, unknown>;
       user?: { id: string; name: string; email: string };
       account?: { access_token?: string; provider?: string };
+      profile?: { name?: string; email?: string };
     }) {
+      // 로그인 시 'name'을 토큰에 추가
       if (user) {
         token.userId = user.id;
-        token.userName = user.name;
+        token.userName = user.name; // 'name'을 token에 저장
       }
       if (account) {
         token.accessToken = account.access_token;
-        token.provider = account.provider;
+        token.provider = account.provider; // 'provider'를 토큰에 저장
+      }
+      if (profile && profile.name) {
+        token.name = profile.name; // profile에서 제공된 'name'을 token에 저장
       }
       return token;
     },
@@ -103,7 +118,8 @@ export const authOptions = {
     }) {
       if (token) {
         session.user.userId = token.userId as string;
-        session.user.name = token.userName as string;
+        session.user.name =
+          (token.userName as string) || (token.name as string);
         session.user.accessToken = token.accessToken as string;
         session.user.provider = token.provider as string;
       }

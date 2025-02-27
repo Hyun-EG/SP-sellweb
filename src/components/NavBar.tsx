@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import SubNav from './SubNav';
 import UserAuth from './UserAuth';
 import logo from '../../public/svgs/icon-logo.svg';
@@ -11,43 +12,27 @@ import darkMode from '../../public/svgs/icon-moon.svg';
 import arrowDown from '../../public/svgs/icon-arrowDown.svg';
 
 const NavBar = () => {
-  const { data: session } = useSession();
+  // data에 유저 정보 담김
+  const { data: data } = useSession();
+  const router = useRouter();
   const [isClick, setIsClick] = useState<string | false>(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-  const userName = session?.user?.name || '사용자';
+  const userName = data?.user?.name || '사용자';
 
   const templateItems = [
     { label: '템플릿 소개', href: '/temp' },
     { label: '기능 소개', href: '/features' },
   ];
   const supportItems = [
-    {
-      label: '공지 사항',
-      href: '/notice',
-    },
-    {
-      label: '1:1 문의',
-      href: '/ask',
-    },
+    { label: '공지 사항', href: '/notice' },
+    { label: '1:1 문의', href: '/ask' },
   ];
   const myPageItems = [
-    {
-      label: '구매내역',
-      href: '/mypage/bought',
-    },
-    {
-      label: '문의내역',
-      href: '/mypage/ask',
-    },
-    {
-      label: '내 정보 수정',
-      href: '/mypage/edit',
-    },
-    {
-      label: '찜 목록',
-      href: '/mypage/like',
-    },
+    { label: '구매내역', href: '/mypage/bought' },
+    { label: '문의내역', href: '/mypage/ask' },
+    { label: '내 정보 수정', href: '/mypage/edit' },
+    { label: '찜 목록', href: '/mypage/like' },
   ];
 
   const toggleDropdown = (dropdown: string) => {
@@ -55,7 +40,18 @@ const NavBar = () => {
   };
 
   const handleLogout = async () => {
-    await signOut({ redirect: false });
+    try {
+      await signOut({ redirect: false });
+
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+
+      router.push('/');
+    } catch (error) {
+      console.error('로그아웃 오류:', error);
+    }
   };
 
   useEffect(() => {
@@ -105,7 +101,7 @@ const NavBar = () => {
             {isClick === 'template' && (
               <div
                 ref={dropdownRef}
-                className="absolute top-full mt-2 w-[255px] bg-white text-white z-50 rounded-lg shadow-md animate-rotateMenu origin-top-center"
+                className="absolute top-full mt-2 w-[255px] bg-white z-50 rounded-lg shadow-md animate-rotateMenu origin-top-center"
               >
                 <SubNav items={templateItems} />
               </div>
@@ -124,7 +120,7 @@ const NavBar = () => {
             {isClick === 'support' && (
               <div
                 ref={dropdownRef}
-                className="absolute top-full mt-2 w-[255px] bg-white text-white z-50 rounded-lg shadow-md animate-rotateMenu origin-top-center"
+                className="absolute top-full mt-2 w-[255px] bg-white z-50 rounded-lg shadow-md animate-rotateMenu origin-top-center"
               >
                 <SubNav items={supportItems} />
               </div>
@@ -143,7 +139,7 @@ const NavBar = () => {
             {isClick === 'myPage' && (
               <div
                 ref={dropdownRef}
-                className="absolute top-full mt-2 w-[255px] bg-white text-white z-50 rounded-lg shadow-md animate-rotateMenu origin-top-center"
+                className="absolute top-full mt-2 w-[255px] bg-white z-50 rounded-lg shadow-md animate-rotateMenu origin-top-center"
               >
                 <SubNav items={myPageItems} />
               </div>
@@ -156,7 +152,7 @@ const NavBar = () => {
           </Link>
         </ol>
         <ol className="flex justify-center items-center space-x-2 w-1/5 pl-8">
-          {session ? (
+          {data ? (
             <>
               <li className="flex items-center justify-center w-[120px] h-[80px] text-center">
                 <p>{userName} 님</p>

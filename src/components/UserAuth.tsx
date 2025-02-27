@@ -60,17 +60,18 @@ const UserAuth = ({ onClose }: UserAuthProps) => {
   const handleLogin = async () => {
     setLoginError(null);
 
+    // 로그인 시 인증 요청
     const res = await signIn('credentials', {
       redirect: false,
-      username: userId,
+      userid: userId,
       password: password,
     });
 
     if (res?.error) {
-      setLoginError(res.error); // 에러 메시지를 UI에 표시
+      console.log(res.error);
+      setLoginError(res.error);
       return;
     }
-
     onClose();
   };
 
@@ -230,7 +231,6 @@ const UserAuth = ({ onClose }: UserAuthProps) => {
           로그인
         </Button>
       </div>
-      {/* {loginError && <p className="text-red-500">{loginError}</p>} */}
       <Button
         width={360}
         height={48}
