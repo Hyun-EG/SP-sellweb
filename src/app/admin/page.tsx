@@ -1,6 +1,7 @@
 import AdminAsk from '@/components/AdminAsk';
 import AdminNotice from '@/components/AdminNotice';
 import AdminSection from '@/components/AdminSection';
+import AdminTemp from '@/components/AdminTemp';
 
 export default function Page() {
   return (
@@ -15,7 +16,9 @@ export default function Page() {
         <AdminSection title="문의내역">
           <AdminAsk />
         </AdminSection>
-        <AdminSection title="템플릿">ㄴㅇ</AdminSection>
+        <AdminSection title="템플릿">
+          <AdminTemp />
+        </AdminSection>
       </div>
     </div>
   );
