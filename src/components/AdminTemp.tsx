@@ -35,8 +35,8 @@ export default function AdminTemp() {
       return;
     }
     try {
-      await fetch('/api/delete-temp', {
-        method: 'POST',
+      await fetch(`/api/delete-temp?id=${selectedTemp._id}`, {
+        method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: selectedTemp._id }),
       });
