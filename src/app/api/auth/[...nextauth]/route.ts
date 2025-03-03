@@ -34,15 +34,15 @@ export const authOptions = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        username: { label: 'userName', type: 'text' },
-        password: { label: 'password', type: 'password' },
+        userId: { label: '아이디', type: 'text', placeholder: '아이디 입력' },
+        password: { label: '비밀번호', type: 'password' },
       },
       async authorize(credentials) {
         try {
           await connectDB();
 
           // 유저를 찾고, 'userName'과 'email'을 포함한 유저 객체 반환
-          const user = await User.findOne({ userId: credentials?.userid });
+          const user = await User.findOne({ userId: credentials?.userId });
           if (!user) {
             throw new Error('아이디 또는 비밀번호를 확인해주세요.');
           }
@@ -61,7 +61,7 @@ export const authOptions = {
           return {
             id: user._id.toString(),
             userId: user.userId,
-            name: user.userName, // 'userName'을 'name'으로 반환
+            name: user.userName ?? user.userId,
             email: user.email,
             provider: 'credentials',
           };
