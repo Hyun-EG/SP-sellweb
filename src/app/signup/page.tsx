@@ -17,6 +17,8 @@ const Page = () => {
   const [userName, setUserName] = useState('');
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
 
   // Google 로그인
   const handleGoogleLogin = () => {
@@ -34,11 +36,13 @@ const Page = () => {
       userName,
       userId,
       password,
+      confirmPassword: password,
       email,
+      provider: 'credentials',
     };
 
     try {
-      const response = await fetch('/api/auth/user-info', {
+      const response = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,13 +53,8 @@ const Page = () => {
       const result = await response.json();
 
       if (response.ok) {
-        const { accessToken, refreshToken } = result;
+        const { accessToken } = result;
         Cookie.set('accessToken', accessToken, { expires: 1, path: '/' });
-        Cookie.set('refreshToken', refreshToken, {
-          expires: 7,
-          path: '/',
-          httpOnly: true,
-        });
 
         alert('회원가입 성공!');
         setUserId('');
@@ -87,14 +86,36 @@ const Page = () => {
 
       const data = await response.json();
 
-      if (data.message === '인증번호가 이메일로 전송되었습니다.') {
-        alert('인증 코드가 이메일로 발송되었습니다.');
+      if (data.message === '서버 오류') {
+        alert('인증번호 발송 중 오류 발생');
       } else {
-        alert('이메일 발송에 실패했습니다.');
+        alert('이메일 발송 성공');
       }
     } catch (error) {
       console.error('에러 발생:', error);
       alert('이메일 발송에 실패했습니다.');
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    try {
+      const response = await fetch('/api/auth/verify-code', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, code: verificationCode }),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        alert('인증 성공');
+      } else {
+        alert(`인증 실패: ${result.message}`);
+      }
+    } catch (error) {
+      console.error('인증번호 확인 중 오류 발생:', error);
+      alert('인증번호 확인 실패');
     }
   };
 
@@ -126,39 +147,54 @@ const Page = () => {
             onChange={(e) => setUserName(e.target.value)}
             required
           />
-          <div className="flex gap-[14px]">
-            <Input
-              state="default"
-              placeholder="이메일을 입력해주세요."
-              width={200}
-              height={48}
-              borderRadius={8}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <Button
-              variant="request"
-              state="default"
-              theme="white"
-              width={100}
-              height={48}
-              color="#ffffff"
-              fontColor="#000000"
-              onClick={handleSendEmail}
-            >
-              인증번호 받기
-            </Button>
-            <Button
-              variant="confirm"
-              theme="white"
-              width={100}
-              height={48}
-              color="#afafaf"
-              fontColor="#ffffff"
-            >
-              인증확인
-            </Button>
+          <div className="flex flex-col gap-[14px]">
+            <div className="flex justify-between w-[428px]">
+              <Input
+                state="default"
+                placeholder="이메일을 입력해주세요."
+                width={320}
+                height={48}
+                borderRadius={8}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <Button
+                variant="request"
+                state="default"
+                theme="white"
+                width={100}
+                height={48}
+                color="#ffffff"
+                fontColor="#000000"
+                onClick={handleSendEmail}
+              >
+                인증번호 받기
+              </Button>
+            </div>
+            <div className="flex justify-between w-[428px]">
+              <Input
+                state="default"
+                placeholder="인증번호를 입력해주세요."
+                width={320}
+                height={48}
+                borderRadius={8}
+                value={verificationCode}
+                onChange={(e) => setVerificationCode(e.target.value)}
+                required
+              />
+              <Button
+                variant="confirm"
+                theme="white"
+                width={100}
+                height={48}
+                color="#afafaf"
+                fontColor="#ffffff"
+                onClick={handleVerifyCode} // 인증번호 확인 버튼 클릭 시 호출
+              >
+                인증확인
+              </Button>
+            </div>
           </div>
           <Input
             state="default"
@@ -177,6 +213,7 @@ const Page = () => {
             width={428}
             height={48}
             borderRadius={8}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
           <Input
@@ -186,8 +223,8 @@ const Page = () => {
             state="default"
             placeholder="비밀번호를 다시 입력해주세요."
             borderRadius={8}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
           <Button
@@ -206,7 +243,9 @@ const Page = () => {
             color="#ffffff"
             fontColor="#000000"
             state="default"
-            onClick={handleGoogleLogin}
+            onClick={() => {
+              handleWebLogin();
+            }}
           >
             <div className="flex items-center justify-center gap-4 w-full h-full ">
               <Image
@@ -214,6 +253,7 @@ const Page = () => {
                 alt="구글로 회원가입"
                 width={26}
                 height={26}
+                onClick={handleGoogleLogin}
               />
               <span>구글로 회원가입</span>
             </div>
