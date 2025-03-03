@@ -2,6 +2,7 @@ import AdminAsk from '@/components/AdminAsk';
 import AdminNotice from '@/components/AdminNotice';
 import AdminSection from '@/components/AdminSection';
 import AdminTemp from '@/components/AdminTemp';
+import AdminChart from '../../components/AdminChart';
 
 export default function Page() {
   return (
@@ -10,7 +11,9 @@ export default function Page() {
         <AdminSection title="공지사항">
           <AdminNotice />
         </AdminSection>
-        <AdminSection title="대시보드">ㄴㅇ</AdminSection>
+        <AdminSection title="대시보드">
+          <AdminChart />
+        </AdminSection>
       </div>
       <div className="w-full h-[400px] flex">
         <AdminSection title="문의내역">
