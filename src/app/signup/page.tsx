@@ -97,7 +97,6 @@ const Page = () => {
     }
   };
 
-  // 인증 Api 확인해야함
   const handleVerifyCode = async () => {
     try {
       const response = await fetch('/api/auth/verify-code', {
