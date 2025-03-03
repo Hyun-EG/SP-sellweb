@@ -106,6 +106,7 @@ export default function AdminTemp() {
               content={temp.description}
               isSelected={selectedTemp?._id === temp._id}
               onSelect={() => setSelectedTemp(temp)}
+              imageUrls={temp.imageUrls ?? []}
             />
           ))}
         </div>

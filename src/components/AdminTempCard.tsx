@@ -3,6 +3,7 @@ interface AdminTempCardProps {
   title: string;
   content: string;
   isSelected: boolean;
+  imageUrls: string[]; // 추가
   onSelect: () => void;
 }
 
@@ -10,6 +11,7 @@ export default function AdminTempCard({
   title,
   content,
   isSelected,
+  imageUrls,
   onSelect,
 }: AdminTempCardProps) {
   return (
@@ -19,8 +21,26 @@ export default function AdminTempCard({
           <span>{title}</span>
         </div>
         <div className="flex overflow-x-scroll gap-[10px]">
-          <div className="w-[100px] h-[70px] flex-shrink-0 border">이미지</div>
+          {(imageUrls?.length ?? 0) > 0 ? (
+            imageUrls.map((url, index) => (
+              <div
+                key={index}
+                className="w-[100px] h-[70px] flex-shrink-0 border"
+              >
+                <img
+                  src={url}
+                  alt={`템플릿 이미지 ${index + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))
+          ) : (
+            <div className="w-[100px] h-[70px] flex-shrink-0 border flex items-center justify-center">
+              이미지 없음
+            </div>
+          )}
         </div>
+
         <div>{content}</div>
       </div>
       <div className="w-[20%] h-[200px] flex justify-center items-center">
