@@ -36,7 +36,7 @@ export default function AdminTempModal({
       setDescription(initialData.description);
       setService(initialData.service);
       setPriceInfo(initialData.priceInfo);
-      setImageUrls(initialData.imageUrls || []);
+      setImageUrls(initialData.imageUrls ?? []);
     } else {
       setTitle('');
       setDescription('');
@@ -79,11 +79,33 @@ export default function AdminTempModal({
     }
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const files = Array.from(e.target.files);
-      const urls = files.map((file) => URL.createObjectURL(file));
-      setImageUrls(urls);
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) {
+      return;
+    }
+
+    const files = Array.from(e.target.files);
+
+    for (const file of files) {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const res = await fetch('/api/upload-image', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const result = await res.json();
+        if (result.success) {
+          setImageUrls((prev) => [...prev, result.url]);
+        } else {
+          alert('이미지 업로드 실패');
+        }
+      } catch (error) {
+        alert('이미지 업로드 중 에러 발생');
+        console.error(error);
+      }
     }
   };
 
@@ -125,7 +147,7 @@ export default function AdminTempModal({
               accept="image/*"
               onChange={handleImageUpload}
             />
-            <div className="h-[100px] flex gap-[10px]">
+            <div className="h-[100px] flex gap-[10px] overflow-x-scroll">
               {imageUrls.map((url, index) => (
                 <div
                   key={index}
@@ -134,7 +156,7 @@ export default function AdminTempModal({
                   <img
                     src={url}
                     alt={`미리보기 ${index}`}
-                    className="w-full h-full object-cover"
+                    className="w-[120px] h-[80px] flex-shrink-0 object-cover"
                   />
                 </div>
               ))}
