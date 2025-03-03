@@ -33,7 +33,8 @@ export default async function signupUser(
   userId: string,
   email: string,
   password: string,
-  confirmPassword: string
+  confirmPassword: string,
+  provider: string
 ) {
   if (!checkUserName(userName)) {
     throw new Error('올바른 이름을 입력해주세요.');
@@ -53,8 +54,14 @@ export default async function signupUser(
     );
   }
 
-  if (password === confirmPassword) {
+  if (password !== confirmPassword) {
     throw new Error('비밀번호가 서로 일치하지 않습니다.');
+  }
+
+  // 가입된 이메일 중복 확인
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    throw new Error('이미 가입된 이메일입니다.');
   }
 
   const hashedPassword = await hashPassword(password);
@@ -64,6 +71,8 @@ export default async function signupUser(
     userId,
     password: hashedPassword,
     email,
+    provider,
+    confirmPassword,
   });
 
   await user.save();
