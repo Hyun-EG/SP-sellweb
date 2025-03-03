@@ -18,9 +18,8 @@ export default function AdminTempCard({
         <div>
           <span>{title}</span>
         </div>
-        <div className="flex gap-[10px]">
-          <div className="w-[100px] h-[70px] border">이미지</div>
-          <div className="w-[100px] h-[70px] border">이미지</div>
+        <div className="flex overflow-x-scroll gap-[10px]">
+          <div className="w-[100px] h-[70px] flex-shrink-0 border">이미지</div>
         </div>
         <div>{content}</div>
       </div>

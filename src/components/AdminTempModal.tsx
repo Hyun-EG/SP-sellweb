@@ -125,7 +125,7 @@ export default function AdminTempModal({
               accept="image/*"
               onChange={handleImageUpload}
             />
-            <div className="h-[100px] flex gap-[10px]">
+            <div className="h-[100px] flex gap-[10px] overflow-x-scroll">
               {imageUrls.map((url, index) => (
                 <div
                   key={index}
@@ -134,7 +134,7 @@ export default function AdminTempModal({
                   <img
                     src={url}
                     alt={`미리보기 ${index}`}
-                    className="w-full h-full object-cover"
+                    className="w-[120px] h-[80px] flex-shrink-0 object-cover"
                   />
                 </div>
               ))}
