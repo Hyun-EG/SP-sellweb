@@ -9,15 +9,10 @@ import human from '../../public/svgs/icon-man(W).svg';
 import Button from '@/components/Button';
 
 interface TemplateCardProps {
-  title?: string;
-  subscription?: string;
-  deadline?: string | number;
-  request?: string | number;
   borderRadius?: number;
   width?: number;
   height?: number;
   templateImages?: (string | StaticImageData)[];
-  description?: string;
 }
 
 const TemplateCard = ({ width, borderRadius, height }: TemplateCardProps) => {
@@ -54,7 +49,7 @@ const TemplateCard = ({ width, borderRadius, height }: TemplateCardProps) => {
   };
 
   return (
-    <div className="flex flex-wrap justify-center gap-4">
+    <div className="flex flex-col justify-center gap-4">
       {tempList.map((template, index) => (
         <div
           key={index}
@@ -96,13 +91,13 @@ const TemplateCard = ({ width, borderRadius, height }: TemplateCardProps) => {
                 <Image
                   src={isHeart ? fillHeartIcon : emptyHeartIcon}
                   alt="찜하기 하트 아이콘"
-                  className="ml-[0.9px]"
+                  className="ml-[0.9px] "
                 />
               </div>
               <p className="flex pt-2 ml-[2px] font-bold align-baseline">
                 <Image
                   src={human}
-                  alt="인간 아이콘"
+                  alt="의뢰 맡긴 사람 수 아이콘"
                   className="mr-2 ml-[1px]"
                 />
                 의뢰 {template.request}명
