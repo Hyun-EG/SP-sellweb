@@ -84,13 +84,14 @@ export const authOptions = {
       profile,
     }: {
       token: Record<string, unknown>;
-      user?: { id: string; name: string; email: string };
+      user?: { id: string; userId: string; name: string; email: string };
       account?: { access_token?: string; provider?: string };
       profile?: { name?: string; email?: string };
     }) {
       // 로그인 시 'name'을 토큰에 추가
       if (user) {
-        token.userId = user.id;
+        token.id = user.id;
+        token.userId = user.userId;
         token.userName = user.name; // 'name'을 token에 저장
       }
       if (account) {

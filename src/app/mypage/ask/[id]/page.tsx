@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import TitleBox from '@/components/TitleBox';
 import DetailTable from '@/components/DetailTable';
 
@@ -16,6 +16,9 @@ export default function AskDetailPage() {
   const { id } = useParams();
   const router = useRouter();
   const [post, setPost] = useState<PostDetail | null>(null);
+
+  const searchParams = useSearchParams();
+  const page = searchParams.get('page') || '1';
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -35,7 +38,7 @@ export default function AskDetailPage() {
           date={post.createdAt}
           content={post.content}
           reply={post.reply}
-          onClick={() => router.push('/mypage/ask')}
+          onClick={() => router.push(`/mypage/ask?page=${page}`)}
         />
       ) : (
         <p className="flex justify-center items-center h-screen text-[40px]">

@@ -3,8 +3,11 @@
 import { useState, useEffect } from 'react';
 import Button from './Button';
 import Input from './Input';
+import { useSession } from 'next-auth/react';
 
 export default function AskDetailTable() {
+  const { data: session, status } = useSession();
+
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [userData, setUserData] = useState<{
@@ -12,45 +15,19 @@ export default function AskDetailTable() {
     userId: string;
     date: string;
   } | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const token = sessionStorage.getItem('token');
-
-      if (!token) {
-        return;
-      }
-
-      try {
-        const response = await fetch('/api/auth/get-token', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (!response.ok) {
-          throw new Error('유저 정보를 가져올 수 없습니다.');
-        }
-
-        const data = await response.json();
-
-        setUserData({
-          name: data.user.userName,
-          userId: data.user.userId,
-          date: new Date().toISOString().split('T')[0],
-        });
-      } catch (error) {
-        console.error('에러 발생:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserData();
-  }, []);
+    if (session?.user) {
+      setUserData({
+        name: session.user.name,
+        userId: session.user.userId,
+        date: new Date().toISOString().split('T')[0],
+      });
+    }
+  }, [session]);
 
   const handleSubmit = async () => {
-    const token = await sessionStorage.getItem('token');
-    if (!token) {
+    if (!session?.user) {
       alert('로그인이 필요합니다.');
       return;
     }
@@ -60,7 +37,7 @@ export default function AskDetailTable() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${session.user.accessToken}`,
         },
         body: JSON.stringify({ title, content }),
       });
@@ -91,7 +68,7 @@ export default function AskDetailTable() {
           이름
         </div>
         <div className="w-[1050px] px-[10px] flex justify-start items-center">
-          {loading ? '로딩 중...' : userData?.name}
+          {status === 'loading' ? '로딩 중...' : userData?.name}
         </div>
       </div>
 
@@ -100,7 +77,7 @@ export default function AskDetailTable() {
           아이디
         </div>
         <div className="w-[1050px] px-[10px] flex justify-start items-center">
-          {loading ? '로딩 중...' : userData?.userId}
+          {status === 'loading' ? '로딩 중...' : userData?.userId}
         </div>
       </div>
 
@@ -109,7 +86,7 @@ export default function AskDetailTable() {
           날짜
         </div>
         <div className="w-[1050px] px-[10px] flex justify-start items-center">
-          {loading ? '로딩 중...' : userData?.date}
+          {status === 'loading' ? '로딩 중...' : userData?.date}
         </div>
       </div>
 
