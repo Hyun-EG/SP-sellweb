@@ -82,14 +82,18 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
 
   return (
     <>
-      <div className="flex justify-between items-end w-[100%] h-[290px] mt-[20px]">
+      <div className="flex justify-between items-end w-full h-[290px] mt-[20px]">
         <div className="flex flex-col justify-evenly w-[45%]">
-          <Image src={dummyImage} alt="사원관리 이미지" />
+          <Image
+            src={dummyImage}
+            alt="템플릿 이미지"
+            className="w-full h-full object-cover"
+          />
         </div>
-        <div className="flex flex-col justify-between w-[500px] h-[100%]">
+        <div className="flex flex-col justify-between w-[500px] h-full">
           <h2 className="text-[24px] font-bold">{data.title}</h2>
           <p className="whitespace-wrap font-bold">{data.description}</p>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mt-4">
             <Button
               theme="white"
               state="default"
@@ -132,9 +136,11 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
           <p>{data.priceInfo || '가격 정보 없음'}</p>
         </div>
       </div>
-      <Button theme="white" state="default" width={1200} height={60}>
-        더보기
-      </Button>
+      <div className="flex justify-center mt-6">
+        <Button theme="white" state="default" width={1200} height={60}>
+          더보기
+        </Button>
+      </div>
     </>
   );
 };
