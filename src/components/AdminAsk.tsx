@@ -8,6 +8,7 @@ interface PostType {
   userName: string;
   title: string;
   createdAt: string;
+  answer: string | null;
 }
 
 export default function AdminAsk() {
@@ -20,6 +21,7 @@ export default function AdminAsk() {
       try {
         const res = await fetch('/api/get-posts?unanswered=true');
         const data = await res.json();
+
         setPosts(data);
       } catch (error) {
         console.error('Error fetching posts:', error);

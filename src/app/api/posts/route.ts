@@ -1,44 +1,31 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from '../../../../lib/db';
 import Post from '../../../../models/Post';
-import User from '../../../../models/User';
-import jwt from 'jsonwebtoken';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../../api/auth/[...nextauth]/route';
+
+interface SessionUser {
+  userId: string;
+  name: string;
+}
 
 export async function POST(req: Request) {
   try {
     await connectDB();
 
-    const authHeader = req.headers.get('authorization');
-    if (!authHeader) {
+    const session = (await getServerSession(authOptions)) as {
+      user: SessionUser | null;
+    };
+
+    if (!session || !session.user) {
       return NextResponse.json(
-        { message: '토큰이 없습니다.' },
+        { message: '로그인이 필요합니다.' },
         { status: 401 }
-      );
-    }
-
-    const token = authHeader.split(' ')[1];
-    const JWT_SECRET = process.env.JWT_SECRET_KEY;
-    if (!JWT_SECRET) {
-      throw new Error('JWT_SECRET 환경 변수가 필요합니다.');
-    }
-
-    const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
-    if (!decoded?.userId) {
-      return NextResponse.json(
-        { message: '유효하지 않은 토큰입니다.' },
-        { status: 401 }
-      );
-    }
-
-    const user = await User.findOne({ userId: decoded.userId });
-    if (!user) {
-      return NextResponse.json(
-        { message: '유저를 찾을 수 없습니다.' },
-        { status: 404 }
       );
     }
 
     const { title, content } = await req.json();
+
     if (!title || !content) {
       return NextResponse.json(
         { message: '제목과 내용을 입력하세요.' },
@@ -47,8 +34,8 @@ export async function POST(req: Request) {
     }
 
     const newPost = new Post({
-      userId: user.userId,
-      userName: user.userName,
+      userId: session.user.userId,
+      userName: session.user.name,
       title,
       content,
       createdAt: new Date(),
@@ -62,6 +49,6 @@ export async function POST(req: Request) {
     );
   } catch (error) {
     console.error('게시글 저장 오류:', error);
-    return NextResponse.json({ message: '서버 오류', error }, { status: 500 });
+    return NextResponse.json({ message: '서버 오류 발생' }, { status: 500 });
   }
 }

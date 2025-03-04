@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Pagination from './Pagination';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
 export default function Table({
@@ -17,7 +17,18 @@ export default function Table({
   link: string;
 }) {
   const [curPageShowData, setCurPageShowData] = useState<string[][]>([]);
+  const [curRowIds, setCurRowIds] = useState<string[]>([]);
   const param = usePathname();
+  const searchParams = useSearchParams();
+  const page = searchParams.get('page') || '1';
+
+  useEffect(() => {
+    const startIndex = (parseInt(page, 10) - 1) * 10;
+    const curData = rows.slice(startIndex, startIndex + 10);
+    const curIds = rowIds.slice(startIndex, startIndex + 10);
+    setCurPageShowData(curData);
+    setCurRowIds(curIds);
+  }, [page, rows, rowIds]);
 
   return (
     <div className="w-[1200px] h-screen pb-[150px] flex flex-col justify-between">
@@ -36,7 +47,7 @@ export default function Table({
         {curPageShowData.map((row, rowIndex) => (
           <Link
             key={rowIndex}
-            href={`${link}/${rowIds[rowIndex]}`}
+            href={`${link}/${curRowIds[rowIndex]}?page=${page}`}
             className="h-[60px] flex border-b border-[#afafaf] cursor-pointer hover:bg-gray-100"
           >
             {row.map((cell, cellIndex) => (

@@ -15,6 +15,9 @@ export default function Page() {
   const [allRows, setAllRows] = useState<string[][]>([]);
   const [rowIds, setRowIds] = useState<string[]>([]);
 
+  const queryParams = new URLSearchParams(window.location.search);
+  const page = queryParams.get('page') || '1';
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -43,7 +46,7 @@ export default function Page() {
     };
 
     fetchPosts();
-  }, []);
+  }, [page]);
 
   return (
     <div className="h-screen">
@@ -57,7 +60,7 @@ export default function Page() {
           ]}
           rows={allRows}
           rowIds={rowIds}
-          link="/mypage/ask"
+          link={`/mypage/ask`}
         />
       )}
     </div>

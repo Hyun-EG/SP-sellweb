@@ -12,7 +12,7 @@ export async function GET(request: Request) {
     const filter = showUnanswered ? { reply: { $exists: false } } : {};
 
     const posts = await Post.find(filter)
-      .select('title createdAt userName _id')
+      .select('title createdAt userName _id reply')
       .sort({ createdAt: 1 });
 
     const formattedPosts = posts.map((post) => ({
@@ -20,6 +20,7 @@ export async function GET(request: Request) {
       userName: post.userName,
       title: post.title,
       createdAt: post.createdAt.toISOString().split('T')[0],
+      answer: post.reply || null,
     }));
 
     return NextResponse.json(formattedPosts);
