@@ -23,7 +23,7 @@ const TemplateCard = ({ width, borderRadius, height }: TemplateCardProps) => {
     description: string;
     templateImages?: (string | StaticImageData)[];
     subscription?: string;
-    request?: string | number;
+    sellingCount?: number;
   }
 
   const [tempList, setTempList] = useState<Template[]>([]);
@@ -108,7 +108,7 @@ const TemplateCard = ({ width, borderRadius, height }: TemplateCardProps) => {
                   alt="의뢰 맡긴 사람 수 아이콘"
                   className="mr-2 ml-[1px]"
                 />
-                의뢰 {temp.request}명
+                의뢰 {temp.sellingCount}명
               </p>
             </div>
             <div className="flex justify-end">
