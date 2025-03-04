@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth';
+import NextAuth, { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import KakaoProvider from 'next-auth/providers/kakao';
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -6,7 +6,7 @@ import bcrypt from 'bcryptjs';
 import { connectDB } from '../../../../../lib/db';
 import User from '../../../../../models/User';
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   cookies: {
     sessionToken: {
       name: `next-auth.session-token`,
@@ -66,7 +66,7 @@ export const authOptions = {
             provider: 'credentials',
           };
         } catch (error) {
-          console.error(error); // 에러 발생 시 로그 출력
+          console.error(error);
           if (error instanceof Error) {
             throw new Error(error.message || '로그인 중 오류가 발생했습니다.');
           } else {
@@ -77,6 +77,8 @@ export const authOptions = {
     }),
   ],
   callbacks: {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     async jwt({
       token,
       user,
@@ -103,6 +105,8 @@ export const authOptions = {
       }
       return token;
     },
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     async session({
       session,
       token,
