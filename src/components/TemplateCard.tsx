@@ -7,6 +7,7 @@ import fillHeartIcon from '../../public/svgs/icon-fillHeart.svg';
 import emptyHeartIcon from '../../public/svgs/icon-emptyHeart.svg';
 import human from '../../public/svgs/icon-man(W).svg';
 import Button from '@/components/Button';
+import Link from 'next/link';
 
 interface TemplateCardProps {
   borderRadius?: number;
@@ -17,11 +18,12 @@ interface TemplateCardProps {
 
 const TemplateCard = ({ width, borderRadius, height }: TemplateCardProps) => {
   interface Template {
+    _id: string;
     title: string;
     description: string;
     templateImages?: (string | StaticImageData)[];
     subscription?: string;
-    request?: string | number;
+    sellingCount?: number;
   }
 
   const [tempList, setTempList] = useState<Template[]>([]);
@@ -30,7 +32,12 @@ const TemplateCard = ({ width, borderRadius, height }: TemplateCardProps) => {
     try {
       const res = await fetch('/api/get-temp');
       const data = await res.json();
-      setTempList(data.data);
+
+      const modifiedData = data.data.map((template: Template) => ({
+        ...template,
+        id: template._id,
+      }));
+      setTempList(modifiedData);
     } catch (error) {
       console.error('템플릿 가져오기 실패', error);
     }
@@ -40,6 +47,7 @@ const TemplateCard = ({ width, borderRadius, height }: TemplateCardProps) => {
 
   useEffect(() => {
     fetchTemplates();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const cardStyle = {
@@ -50,18 +58,18 @@ const TemplateCard = ({ width, borderRadius, height }: TemplateCardProps) => {
 
   return (
     <div className="flex flex-col justify-center gap-4">
-      {tempList.map((template, index) => (
+      {tempList.map((temp, index) => (
         <div
           key={index}
           style={cardStyle}
           className="flex justify-around w-full max-w-[1000px] h-[250px] border border-gray-300"
         >
           <div className="flex flex-col justify-evenly w-[40%]">
-            <h2 className="text-[24px] font-bold">{template.title}</h2>
-            <p className="text-gray-600">{template.description}</p>
+            <h2 className="text-[24px] font-bold">{temp.title}</h2>
+            <p className="text-gray-600">{temp.description}</p>
             <div className="flex gap-2 overflow-x-auto">
-              {(template.templateImages ?? []).length > 0 ? (
-                template.templateImages?.map((image, index) => (
+              {(temp.templateImages ?? []).length > 0 ? (
+                temp.templateImages?.map((image, index) => (
                   <Image
                     key={index}
                     src={image}
@@ -79,7 +87,7 @@ const TemplateCard = ({ width, borderRadius, height }: TemplateCardProps) => {
                 />
               )}
             </div>
-            <p className="font-bold">{template.subscription}</p>
+            <p className="font-bold">{temp.subscription}</p>
           </div>
           <div className="flex flex-col justify-evenly w-[20%]">
             <div className="h-[60%] relative">
@@ -100,20 +108,22 @@ const TemplateCard = ({ width, borderRadius, height }: TemplateCardProps) => {
                   alt="의뢰 맡긴 사람 수 아이콘"
                   className="mr-2 ml-[1px]"
                 />
-                의뢰 {template.request}명
+                의뢰 {temp.sellingCount}명
               </p>
             </div>
             <div className="flex justify-end">
-              <Button
-                theme="white"
-                state="default"
-                width={100}
-                height={40}
-                color="white"
-                fontColor="black"
-              >
-                자세히 보기
-              </Button>
+              <Link href={`/temp/${temp._id}`}>
+                <Button
+                  theme="white"
+                  state="default"
+                  width={100}
+                  height={40}
+                  color="white"
+                  fontColor="black"
+                >
+                  자세히 보기
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
