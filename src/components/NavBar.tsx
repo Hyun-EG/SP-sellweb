@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useSession, signOut } from 'next-auth/react';
+import { Session } from 'next-auth';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -12,13 +13,16 @@ import darkMode from '../../public/svgs/icon-moon.svg';
 import arrowDown from '../../public/svgs/icon-arrowDown.svg';
 
 const NavBar = () => {
-  // data에 유저 정보 담김
-  const { data: data } = useSession();
+  const { data } = useSession() as {
+    data: Session & { user: { admin?: boolean } };
+  };
   const router = useRouter();
   const [isClick, setIsClick] = useState<string | false>(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+
   const userName = data?.user?.name || '사용자';
+  const isAdmin = data?.user?.admin || false;
 
   const templateItems = [
     { label: '템플릿 소개', href: '/temp' },
@@ -145,11 +149,14 @@ const NavBar = () => {
               </div>
             )}
           </li>
-          <Link href="/admin">
-            <li className="flex items-center justify-center w-[120px] h-[80px] text-center cursor-pointer">
-              관리자
-            </li>
-          </Link>
+
+          {isAdmin && (
+            <Link href="/admin">
+              <li className="flex items-center justify-center w-[120px] h-[80px] text-center cursor-pointer">
+                관리자
+              </li>
+            </Link>
+          )}
         </ol>
         <ol className="flex justify-center items-center space-x-2 w-1/5 pl-8">
           {data ? (

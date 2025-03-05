@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     refreshToken: { type: String },
     verificationCode: { type: String, required: true },
+    admin: { type: Boolean, default: false, required: false },
   },
   { timestamps: true }
 );
