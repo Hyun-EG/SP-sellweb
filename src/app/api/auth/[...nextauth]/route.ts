@@ -6,6 +6,18 @@ import bcrypt from 'bcryptjs';
 import { connectDB } from '../../../../../lib/db';
 import User from '../../../../../models/User';
 
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      userId: string;
+      name: string;
+      accessToken: string;
+      provider: string;
+      admin: boolean;
+    };
+  }
+}
+
 export const authOptions: NextAuthOptions = {
   cookies: {
     sessionToken: {
@@ -20,7 +32,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   session: {
-    strategy: 'jwt' as 'jwt' | 'database',
+    strategy: 'jwt',
   },
   providers: [
     GoogleProvider({
@@ -41,92 +53,65 @@ export const authOptions: NextAuthOptions = {
         try {
           await connectDB();
 
-          // 유저를 찾고, 'userName'과 'email'을 포함한 유저 객체 반환
           const user = await User.findOne({ userId: credentials?.userId });
           if (!user) {
             throw new Error('아이디 또는 비밀번호를 확인해주세요.');
           }
 
-          // 비밀번호 비교
           const isValidPassword = await bcrypt.compare(
-            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-            credentials?.password!,
+            credentials?.password || '',
             user.password
           );
           if (!isValidPassword) {
             throw new Error('아이디 또는 비밀번호를 확인해주세요.');
           }
 
-          // 유저 정보를 반환, 'userName'을 'name'으로 반환유저 객체를 출력하여 'userName'이 있는지 확인
           return {
             id: user._id.toString(),
             userId: user.userId,
             name: user.userName ?? user.userId,
             email: user.email,
+            admin: user.admin, // 관리자 여부 추가
             provider: 'credentials',
           };
         } catch (error) {
           console.error(error);
-          if (error instanceof Error) {
-            throw new Error(error.message || '로그인 중 오류가 발생했습니다.');
-          } else {
-            throw new Error('로그인 중 오류가 발생했습니다.');
-          }
+          throw new Error(
+            error instanceof Error
+              ? error.message
+              : '로그인 중 오류가 발생했습니다.'
+          );
         }
       },
     }),
   ],
   callbacks: {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    async jwt({
-      token,
-      user,
-      account,
-      profile,
-    }: {
-      token: Record<string, unknown>;
-      user?: { id: string; userId: string; name: string; email: string };
-      account?: { access_token?: string; provider?: string };
-      profile?: { name?: string; email?: string };
-    }) {
-      // 로그인 시 'name'을 토큰에 추가
+    async jwt({ token, user, account, profile }) {
       if (user) {
         token.id = user.id;
-        token.userId = user.userId;
-        token.userName = user.name; // 'name'을 token에 저장
+        token.userId = (user as unknown as { userId: string }).userId;
+        token.userName = user.name;
+        token.admin = (user as unknown as { admin: string }).admin; // 관리자 여부 저장
       }
       if (account) {
         token.accessToken = account.access_token;
-        token.provider = account.provider; // 'provider'를 토큰에 저장
+        token.provider = account.provider;
       }
       if (profile && profile.name) {
-        token.name = profile.name; // profile에서 제공된 'name'을 token에 저장
+        token.name = profile.name;
       }
       return token;
     },
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    async session({
-      session,
-      token,
-    }: {
-      session: {
-        user: {
-          userId: string;
-          name: string;
-          accessToken: string;
-          provider: string;
-        };
-      };
-      token: Record<string, unknown>;
-    }) {
+    async session({ session, token }) {
       if (token) {
-        session.user.userId = token.userId as string;
-        session.user.name =
-          (token.userName as string) || (token.name as string);
-        session.user.accessToken = token.accessToken as string;
-        session.user.provider = token.provider as string;
+        if (session.user) {
+          session.user.userId = token.userId as string;
+          session.user.name =
+            (token.userName as string) || (token.name as string);
+          session.user.accessToken = token.accessToken as string;
+          session.user.provider = token.provider as string;
+          session.user.admin = token.admin as boolean; // 관리자 여부 세션에 추가
+        }
       }
       return session;
     },
