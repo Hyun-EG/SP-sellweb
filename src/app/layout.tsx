@@ -42,7 +42,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthWrapper>
-          <AdBox content="광고글입니다." />
+          <AdBox />
           <NavBar />
           <Contents>{children}</Contents>
           <ChatBtn backgroundColor="black" />

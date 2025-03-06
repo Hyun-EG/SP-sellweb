@@ -67,7 +67,6 @@ const UserAuth = ({ onClose }: UserAuthProps) => {
       userId: userId,
       password: password,
     });
-    console.log(res);
     if (res?.error) {
       setLoginError(res.error);
       return;
