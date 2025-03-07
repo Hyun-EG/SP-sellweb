@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Table from '@/components/Table';
 import TitleBox from '@/components/TitleBox';
 
+// eslint-disable-next-line no-unused-vars
 interface Notice {
   _id: string;
   title: string;

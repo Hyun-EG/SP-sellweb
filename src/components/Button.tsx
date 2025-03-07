@@ -34,9 +34,9 @@ const Button = ({
       return;
     }
     if (variant === 'request') {
-      console.log('인증 요청');
+      alert('인증 요청');
     } else if (variant === 'confirm') {
-      console.log('인증 확인');
+      alert('인증 확인');
     }
 
     if (onClick) {

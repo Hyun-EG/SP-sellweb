@@ -1,9 +1,11 @@
+import Image from 'next/image';
+
 interface AdminTempCardProps {
   id: string;
   title: string;
   content: string;
   isSelected: boolean;
-  imageUrls: string[]; // 추가
+  imageUrls: string[];
   onSelect: () => void;
 }
 
@@ -27,9 +29,11 @@ export default function AdminTempCard({
                 key={index}
                 className="w-[100px] h-[70px] flex-shrink-0 border"
               >
-                <img
+                <Image
                   src={url}
                   alt={`템플릿 이미지 ${index + 1}`}
+                  width={100} // 이미지의 너비
+                  height={70} // 이미지의 높이
                   className="w-full h-full object-cover"
                 />
               </div>

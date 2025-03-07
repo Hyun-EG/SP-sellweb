@@ -1,7 +1,6 @@
-'use client';
-import Button from './Button';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Button from './Button';
 
 interface DetailTableProps {
   title: string;
@@ -36,10 +35,6 @@ export default function DetailTable({
 }: DetailTableProps) {
   const path = usePathname();
   const router = useRouter();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [posts, setPosts] = useState<Post[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [notices, setNotices] = useState<Notice[]>([]);
   const [previousPost, setPreviousPost] = useState<Post | null>(null);
   const [nextPost, setNextPost] = useState<Post | null>(null);
   const [previousNotice, setPreviousNotice] = useState<Notice | null>(null);
@@ -57,7 +52,6 @@ export default function DetailTable({
           }
 
           const data: Post[] = await response.json();
-          setPosts(data);
 
           const currentIndex = data.findIndex((post) => post._id === currentId);
           if (currentIndex === -1) {
@@ -87,7 +81,6 @@ export default function DetailTable({
         try {
           const response = await fetch('/api/get-notice');
           const data: Notice[] = await response.json();
-          setNotices(data);
 
           const currentIndex = data.findIndex(
             (notice) => notice._id === currentId
