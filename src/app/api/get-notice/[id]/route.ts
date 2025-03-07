@@ -2,10 +2,13 @@ import { connectDB } from '../../../../../lib/db';
 import { NextRequest, NextResponse } from 'next/server';
 import Notice from '../../../../../models/Notice';
 
-export async function GET(
-  req: NextRequest,
-  context: { params: { id: string } }
-) {
+interface Context {
+  params: {
+    id: string;
+  };
+}
+
+export async function GET(req: NextRequest, context: Context) {
   try {
     await connectDB();
     const { id } = context.params;
