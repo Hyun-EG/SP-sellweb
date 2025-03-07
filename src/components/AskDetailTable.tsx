@@ -51,9 +51,8 @@ export default function AskDetailTable() {
       alert('게시글이 등록되었습니다.');
       setTitle('');
       setContent('');
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      alert('서버 오류가 발생했습니다.');
+      alert(error);
     }
   };
 

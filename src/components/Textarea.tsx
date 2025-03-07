@@ -3,7 +3,9 @@ interface TextareaProps {
   height: string;
   borderRadius?: string;
   placeholder?: string;
+  // eslint-disable-next-line no-unused-vars
   onClick?: (event: React.MouseEvent<HTMLTextAreaElement>) => void;
+  // eslint-disable-next-line no-unused-vars
   onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   value?: string;
   onKeyDown?: React.KeyboardEventHandler<HTMLTextAreaElement>;

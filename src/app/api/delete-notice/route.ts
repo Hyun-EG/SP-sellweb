@@ -24,8 +24,8 @@ export async function DELETE(req: Request) {
       { message: '공지사항이 삭제되었습니다' },
       { status: 200 }
     );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (err) {
+    alert(err);
     return NextResponse.json({ message: '삭제 중 오류 발생' }, { status: 500 });
   }
 }

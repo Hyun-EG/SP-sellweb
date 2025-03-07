@@ -21,9 +21,8 @@ export async function POST(req: Request) {
       { message: '공지사항이 추가되었습니다', notice: newNotice },
       { status: 201 }
     );
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (err) {
+    alert(err);
     return NextResponse.json(
       { message: '공지사항 추가 중 오류 발생' },
       { status: 500 }
