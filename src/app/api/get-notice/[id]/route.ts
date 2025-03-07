@@ -4,11 +4,11 @@ import Notice from '../../../../../models/Notice';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     await connectDB();
-    const { id } = params;
+    const { id } = context.params;
 
     const notice = await Notice.findById(id);
     if (!notice) {
@@ -20,7 +20,7 @@ export async function GET(
 
     return NextResponse.json(notice, { status: 200 });
   } catch (err) {
-    alert(err);
+    console.error(err);
     return NextResponse.json(
       { message: '공지사항 가져오는 중 오류 발생' },
       { status: 500 }
