@@ -2,16 +2,15 @@ import { connectDB } from '../../../../../lib/db';
 import { NextRequest, NextResponse } from 'next/server';
 import Notice from '../../../../../models/Notice';
 
-interface Context {
-  params: {
-    id: string;
-  };
-}
-
-export async function GET(req: NextRequest, context: Context) {
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     await connectDB();
-    const { id } = context.params;
+    const { id } = params;
 
     const notice = await Notice.findById(id);
     if (!notice) {
