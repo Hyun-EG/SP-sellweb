@@ -4,8 +4,9 @@ import Temp from '../../../../../../models/Temp';
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
+  const params = await props.params;
   await connectDB();
 
   try {

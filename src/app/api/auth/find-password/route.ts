@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { connectDB } from '../../../../../lib/db';
 import User from '../../../../../models/User';
-import Verification from '../../../../../models/Verification';
+import Verification from '../../../../../models/verification';
 
 export async function POST(req: Request) {
   try {

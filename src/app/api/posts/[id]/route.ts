@@ -4,8 +4,9 @@ import Post from '../../../../../models/Post';
 
 export async function GET(
   _: NextRequest,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
+  const params = await props.params;
   await connectDB();
   const post = await Post.findById(params.id);
   if (!post) {
@@ -16,8 +17,9 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
+  const params = await props.params;
   await connectDB();
   const { reply } = await req.json();
 

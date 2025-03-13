@@ -4,8 +4,9 @@ import Post from '../../../../../models/Post';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
+  const params = await props.params;
   try {
     await connectDB();
 

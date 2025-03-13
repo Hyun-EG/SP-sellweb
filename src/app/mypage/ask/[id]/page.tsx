@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import TitleBox from '@/components/TitleBox';
 import DetailTable from '@/components/DetailTable';
@@ -30,21 +30,29 @@ export default function AskDetailPage() {
   }, [id]);
 
   return (
-    <div>
-      <TitleBox title="문의내역" />
-      {post ? (
-        <DetailTable
-          title={post.title}
-          date={post.createdAt}
-          content={post.content}
-          reply={post.reply}
-          onClick={() => router.push(`/mypage/ask?page=${page}`)}
-        />
-      ) : (
+    <Suspense
+      fallback={
         <p className="flex justify-center items-center h-screen text-[40px]">
           Loading...
         </p>
-      )}
-    </div>
+      }
+    >
+      <div>
+        <TitleBox title="문의내역" />
+        {post ? (
+          <DetailTable
+            title={post.title}
+            date={post.createdAt}
+            content={post.content}
+            reply={post.reply}
+            onClick={() => router.push(`/mypage/ask?page=${page}`)}
+          />
+        ) : (
+          <p className="flex justify-center items-center h-screen text-[40px]">
+            Loading...
+          </p>
+        )}
+      </div>
+    </Suspense>
   );
 }

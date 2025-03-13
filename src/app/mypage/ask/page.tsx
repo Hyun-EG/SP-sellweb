@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import Table from '@/components/Table';
 import TitleBox from '@/components/TitleBox';
 
@@ -14,9 +14,13 @@ interface Post {
 export default function Page() {
   const [allRows, setAllRows] = useState<string[][]>([]);
   const [rowIds, setRowIds] = useState<string[]>([]);
+  const [page, setPage] = useState<string>('1');
 
-  const queryParams = new URLSearchParams(window.location.search);
-  const page = queryParams.get('page') || '1';
+  useEffect(() => {
+    // 클라이언트에서만 window.location.search 사용
+    const queryParams = new URLSearchParams(window.location.search);
+    setPage(queryParams.get('page') || '1');
+  }, []);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -51,18 +55,20 @@ export default function Page() {
   return (
     <div className="h-screen">
       <TitleBox title="문의내역" />
-      {allRows.length === rowIds.length && (
-        <Table
-          headers={[
-            { label: '이름', width: '100px' },
-            { label: '제목', width: '900px' },
-            { label: '등록 날짜', width: '200px' },
-          ]}
-          rows={allRows}
-          rowIds={rowIds}
-          link={`/mypage/ask`}
-        />
-      )}
+      <Suspense fallback={<div>Loading...</div>}>
+        {allRows.length === rowIds.length && (
+          <Table
+            headers={[
+              { label: '이름', width: '100px' },
+              { label: '제목', width: '900px' },
+              { label: '등록 날짜', width: '200px' },
+            ]}
+            rows={allRows}
+            rowIds={rowIds}
+            link={`/mypage/ask`}
+          />
+        )}
+      </Suspense>
     </div>
   );
 }

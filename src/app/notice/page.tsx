@@ -1,10 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Table from '@/components/Table';
 import TitleBox from '@/components/TitleBox';
 
-// eslint-disable-next-line no-unused-vars
 interface Notice {
   _id: string;
   title: string;
@@ -12,6 +11,17 @@ interface Notice {
 }
 
 export default function Notice() {
+  return (
+    <div className="h-full">
+      <TitleBox title="공지사항" />
+      <Suspense fallback={<div>Loading...</div>}>
+        <TableWrapper />
+      </Suspense>
+    </div>
+  );
+}
+
+function TableWrapper() {
   const [allRows, setAllRows] = useState<string[][]>([]);
   const [rowIds, setRowIds] = useState<string[]>([]);
 
@@ -42,18 +52,15 @@ export default function Notice() {
   }, []);
 
   return (
-    <div className="h-full">
-      <TitleBox title="공지사항" />
-      <Table
-        headers={[
-          { label: '번호', width: '100px' },
-          { label: '제목', width: '900px' },
-          { label: '등록 날짜', width: '200px' },
-        ]}
-        rows={allRows}
-        rowIds={rowIds}
-        link="/notice"
-      />
-    </div>
+    <Table
+      headers={[
+        { label: '번호', width: '100px' },
+        { label: '제목', width: '900px' },
+        { label: '등록 날짜', width: '200px' },
+      ]}
+      rows={allRows}
+      rowIds={rowIds}
+      link="/notice"
+    />
   );
 }

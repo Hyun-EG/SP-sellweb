@@ -4,11 +4,11 @@ import Notice from '../../../../../models/Notice';
 
 export async function GET(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
-    const { id } = context.params;
+    const { id } = await context.params;
 
     const notice = await Notice.findById(id);
     if (!notice) {

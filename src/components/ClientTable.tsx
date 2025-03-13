@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Pagination from './Pagination';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import React, { Suspense } from 'react';
 
-export default function Table({
+const ClientTable = ({
   headers,
   rows,
   rowIds,
@@ -15,11 +15,10 @@ export default function Table({
   rows: string[][];
   rowIds: string[];
   link: string;
-}) {
+}) => {
   const [curPageShowData, setCurPageShowData] = useState<string[][]>([]);
   const [curRowIds, setCurRowIds] = useState<string[]>([]);
 
-  const param = usePathname();
   const searchParams = useSearchParams();
   const page = searchParams.get('page') || '1';
 
@@ -27,7 +26,6 @@ export default function Table({
     if (rows.length === 0 || rowIds.length === 0) {
       return;
     }
-
     const startIndex = (parseInt(page, 10) - 1) * 10;
     const curData = rows.slice(startIndex, startIndex + 10);
     const curIds = rowIds.slice(startIndex, startIndex + 10);
@@ -67,9 +65,28 @@ export default function Table({
           </Link>
         ))}
       </div>
-      {param !== '/mypage/bought/detail' && (
-        <Pagination data={rows} setCurPageShowData={setCurPageShowData} />
-      )}
     </div>
+  );
+};
+
+const SuspenseTableWrapper = ({ children }: { children: React.ReactNode }) => (
+  <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+);
+
+export default function Page({
+  headers,
+  rows,
+  rowIds,
+  link,
+}: {
+  headers: { label: string; width: string }[];
+  rows: string[][];
+  rowIds: string[];
+  link: string;
+}) {
+  return (
+    <SuspenseTableWrapper>
+      <ClientTable headers={headers} rows={rows} rowIds={rowIds} link={link} />
+    </SuspenseTableWrapper>
   );
 }

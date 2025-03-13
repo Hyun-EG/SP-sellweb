@@ -1,13 +1,13 @@
 import React from 'react';
 import TitleBox from '@/components/TitleBox';
-import Table from '@/components/Table';
+import ClientTable from '@/components/ClientTable';
 
 const Page = () => {
   return (
     <>
       <TitleBox title="구매내역" />
-
-      <Table
+      {/* 클라이언트 전용 Table 컴포넌트 렌더링 */}
+      <ClientTable
         headers={[
           { label: '템플릿명', width: '300px' },
           { label: '구매날짜', width: '300px' },

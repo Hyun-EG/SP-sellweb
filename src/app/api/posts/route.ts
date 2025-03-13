@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { connectDB } from '../../../../lib/db';
 import Post from '../../../../models/Post';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../api/auth/[...nextauth]/route';
+import { authOptions } from '../../../../lib/authOptions';
 
 interface SessionUser {
   userId: string;
