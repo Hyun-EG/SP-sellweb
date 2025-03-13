@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import bcrypt from 'bcryptjs';
 import { connectDB } from '../../../../../lib/db';
-import Verification from '../../../../../models/verification';
+import Verification from '../../../../../models/HelloWorld';
 
 const SALT_ROUNDS = 10;
 
