@@ -6,7 +6,7 @@ import AdBox from '../../../../models/AdBox';
 export async function GET() {
   try {
     await connectDB();
-    const ads = await AdBox.find(); // 최신 광고 먼저 가져오기
+    const ads = await AdBox.find().sort({ createdAt: -1 }); // 최신 광고 먼저 가져오기
     return NextResponse.json({ ads }, { status: 200 });
   } catch (err) {
     console.error('광고 불러오기 오류:', err);
