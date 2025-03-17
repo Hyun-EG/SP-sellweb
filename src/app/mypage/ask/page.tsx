@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, Suspense } from 'react';
+import { useSession } from 'next-auth/react';
 import Table from '@/components/Table';
 import TitleBox from '@/components/TitleBox';
 
@@ -16,6 +17,9 @@ export default function Page() {
   const [rowIds, setRowIds] = useState<string[]>([]);
   const [page, setPage] = useState<string>('1');
 
+  const { data } = useSession();
+  const loginState = data?.user;
+
   useEffect(() => {
     // 클라이언트에서만 window.location.search 사용
     const queryParams = new URLSearchParams(window.location.search);
@@ -25,7 +29,7 @@ export default function Page() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch('/api/get-posts');
+        const response = await fetch(`/api/get-posts?user=${loginState?.name}`);
         if (!response.ok) {
           throw new Error('데이터를 가져올 수 없습니다.');
         }
@@ -49,8 +53,10 @@ export default function Page() {
       }
     };
 
-    fetchPosts();
-  }, [page]);
+    if (loginState) {
+      fetchPosts();
+    }
+  }, [page, loginState]);
 
   return (
     <div className="h-screen">
