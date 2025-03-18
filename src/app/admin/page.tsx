@@ -1,20 +1,18 @@
 import AdminAsk from '@/components/AdminAsk';
-import AdminNotice from '@/components/AdminNotice';
 import AdminSection from '@/components/AdminSection';
 import AdminTemp from '@/components/AdminTemp';
 import AdminChart from '../../components/AdminChart';
-import AdminAd from '../../components/AdminAd';
+import AdminNoticeAd from '@/components/AdminNoticeAd';
 
 export default function Page() {
   return (
     <div className="h-full p-[20px] flex flex-col">
       <div className="w-full h-[400px] flex">
-        <AdminSection title="공지사항">
-          <AdminNotice />
+        <AdminSection>
+          <AdminNoticeAd />
         </AdminSection>
         <AdminSection title="대시보드">
           <AdminChart />
-          <AdminAd />
         </AdminSection>
       </div>
       <div className="w-full h-[400px] flex">
