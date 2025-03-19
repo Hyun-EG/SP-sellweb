@@ -19,6 +19,7 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
     service?: string;
     priceInfo?: string;
     sellingCount?: number;
+    imageUrls?: string;
   }
 
   const [data, setData] = useState<TemplateData | null>(null);
@@ -82,60 +83,72 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
 
   return (
     <>
-      <div className="flex justify-between items-end w-full h-[290px] mt-[20px]">
-        <div className="flex flex-col justify-evenly w-[45%]">
-          <Image
-            src={dummyImage}
-            alt="템플릿 이미지"
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <div className="flex flex-col justify-between w-[500px] h-full">
-          <h2 className="text-[24px] font-bold">{data.title}</h2>
-          <p className="whitespace-wrap font-bold">{data.description}</p>
-          <div className="flex justify-between items-center mt-4">
-            <Button
-              theme="white"
-              state="default"
+      <section className="w-full mt-[20px]">
+        <article className="flex justify-between items-end h-[290px]">
+          <section className="flex flex-col justify-evenly w-[45%]">
+            <Image
+              src={data.imageUrls?.[0] || dummyImage}
+              alt="템플릿 이미지"
+              className="w-full h-full object-cover"
               width={400}
               height={40}
-              color="slateGray"
-              onClick={handleOrder}
-            >
-              의뢰하기
-            </Button>
-            <div className="flex flex-col items-center">
-              <div
-                onClick={() => setIsHeart(!isHeart)}
-                className="cursor-pointer items-center"
+            />
+          </section>
+          <div className="flex flex-col justify-between w-[500px] h-full">
+            <header>
+              <h2 className="text-[24px] font-bold">{data.title}</h2>
+            </header>
+            <p className="whitespace-wrap font-bold">{data.description}</p>
+            <footer className="flex justify-between items-center mt-4">
+              <Button
+                theme="white"
+                state="default"
+                width={400}
+                height={40}
+                color="slateGray"
+                onClick={handleOrder}
               >
-                <Image
-                  src={isHeart ? fillHeartIcon : emptyHeartIcon}
-                  alt="찜하기 하트 아이콘"
-                  className="flex items-center ml-3"
-                />
+                의뢰하기
+              </Button>
+              <div className="flex flex-col items-center">
+                <button
+                  onClick={() => setIsHeart(!isHeart)}
+                  className="cursor-pointer items-center"
+                  aria-label="찜하기 버튼"
+                >
+                  <Image
+                    src={isHeart ? fillHeartIcon : emptyHeartIcon}
+                    alt="찜하기 하트 아이콘"
+                    className="flex items-center ml-3"
+                  />
+                </button>
               </div>
-            </div>
+            </footer>
           </div>
-        </div>
-      </div>
-      <SlideBar
-        items={['서비스 소개', '가격 정보']}
-        slideWidth={120}
-        onTabChange={handleTabChange}
-        activeIndex={0}
-      />
-      <div className="mt-6 flex flex-col gap-10">
-        <div ref={serviceRef} className="w-full h-[300px]">
+        </article>
+      </section>
+
+      <nav>
+        <SlideBar
+          items={['서비스 소개', '가격 정보']}
+          slideWidth={120}
+          onTabChange={handleTabChange}
+          activeIndex={0}
+        />
+      </nav>
+
+      <section className="mt-6 flex flex-col gap-10">
+        <article ref={serviceRef} className="w-full h-[300px]">
           <h3 className="text-xl font-bold">서비스 소개</h3>
           <p>{data.service || '서비스 소개 내용 없음'}</p>
-        </div>
+        </article>
 
-        <div ref={priceRef} className="w-full h-[300px]">
+        <article ref={priceRef} className="w-full h-[300px]">
           <h3 className="text-xl font-bold">가격 정보</h3>
           <p>{data.priceInfo || '가격 정보 없음'}</p>
-        </div>
-      </div>
+        </article>
+      </section>
+
       <div className="flex justify-center mt-6">
         <Button theme="white" state="default" width={1200} height={60}>
           더보기
