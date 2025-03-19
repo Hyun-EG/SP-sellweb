@@ -21,7 +21,7 @@ const TemplateCard = ({ width, borderRadius, height }: TemplateCardProps) => {
     _id: string;
     title: string;
     description: string;
-    templateImages?: (string | StaticImageData)[];
+    imageUrls?: (string | StaticImageData)[];
     subscription?: string;
     sellingCount?: number;
   }
@@ -32,7 +32,6 @@ const TemplateCard = ({ width, borderRadius, height }: TemplateCardProps) => {
     try {
       const res = await fetch('/api/get-temp');
       const data = await res.json();
-
       const modifiedData = data.data.map((template: Template) => ({
         ...template,
         id: template._id,
@@ -68,22 +67,22 @@ const TemplateCard = ({ width, borderRadius, height }: TemplateCardProps) => {
             <h2 className="text-[24px] font-bold">{temp.title}</h2>
             <p className="text-gray-600">{temp.description}</p>
             <div className="flex gap-2 overflow-x-auto">
-              {(temp.templateImages ?? []).length > 0 ? (
-                temp.templateImages?.map((image, index) => (
+              {(temp.imageUrls ?? []).length > 0 ? (
+                temp.imageUrls?.map((image, index) => (
                   <Image
                     key={index}
                     src={image}
-                    alt={`템플릿 이미지 ${index + 1}`}
-                    width={120}
-                    height={120}
+                    alt="템플릿 이미지"
+                    width={256}
+                    height={107}
                   />
                 ))
               ) : (
                 <Image
-                  src="/default-image-path.jpg"
-                  alt="기본 이미지"
-                  width={120}
-                  height={120}
+                  src={temp.imageUrls?.[0] || '/default-image-path'}
+                  alt="추가된 이미지가 없습니다."
+                  width={256}
+                  height={107}
                 />
               )}
             </div>
