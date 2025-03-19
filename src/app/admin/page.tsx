@@ -1,8 +1,8 @@
 import AdminAsk from '@/components/AdminAsk';
-import AdminNoticeAd from '@/components/AdminNoticeAd';
 import AdminSection from '@/components/AdminSection';
 import AdminTemp from '@/components/AdminTemp';
 import AdminChart from '../../components/AdminChart';
+import AdminNoticeAd from '@/components/AdminNoticeAd';
 
 export default function Page() {
   return (

@@ -2,14 +2,28 @@ import { NextResponse } from 'next/server';
 import { connectDB } from '../../../../lib/db';
 import Post from '../../../../models/Post';
 
+interface Filter {
+  userName?: string;
+  reply?: string;
+}
+
 export async function GET(request: Request) {
   try {
     await connectDB();
 
     const { searchParams } = new URL(request.url);
+    const user = searchParams.get('user');
     const showUnanswered = searchParams.get('unanswered') === 'true';
 
-    const filter = showUnanswered ? { reply: { $exists: false } } : {};
+    const filter: Filter = {};
+
+    if (user) {
+      filter.userName = user;
+    }
+
+    if (showUnanswered) {
+      filter.reply = '';
+    }
 
     const posts = await Post.find(filter)
       .select('title createdAt userName _id reply')
