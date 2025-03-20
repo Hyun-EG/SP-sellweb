@@ -14,6 +14,7 @@ declare module 'next-auth' {
       accessToken: string;
       provider: string;
       admin: boolean;
+      email: string;
     };
   }
 }
