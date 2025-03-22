@@ -21,6 +21,7 @@ export async function POST(req: Request) {
 
     // 해당 유저가 존재하는지 확인
     const user = await User.findOne({ userId, email });
+
     if (!user) {
       return NextResponse.json(
         { message: '사용자를 찾을 수 없습니다.' },
@@ -32,7 +33,10 @@ export async function POST(req: Request) {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     // DB에 새 비밀번호 업데이트
-    await User.updateOne({ _id: user._id }, { password: hashedPassword });
+    await User.updateOne(
+      { _id: user._id },
+      { $set: { password: hashedPassword } }
+    );
 
     return NextResponse.json(
       { message: '비밀번호가 성공적으로 변경되었습니다.' },
