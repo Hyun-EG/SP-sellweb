@@ -374,7 +374,7 @@ const UserAuth = ({ onClose }: UserAuthProps) => {
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
       onClick={onClose}
     >
       <div
