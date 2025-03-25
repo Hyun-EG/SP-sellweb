@@ -12,6 +12,7 @@ import iconReact from '../../public/home-svgs/icon-react.svg';
 import iconRedux from '../../public/home-svgs/icon-redux.svg';
 import iconJest from '../../public/home-svgs/icon-jest.png';
 import iconSass from '../../public/home-svgs/icon-sass.png';
+import projectImages from '../../public/imgs/projects.webp';
 import Image from 'next/image';
 import { useRef, useEffect, useState } from 'react';
 
@@ -41,8 +42,6 @@ const Home = () => {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-        } else {
-          setIsVisible(false);
         }
       },
       { threshold: 0.5 }
@@ -114,7 +113,17 @@ const Home = () => {
             템플릿으로 콘텐츠까지 쉽게!
           </div>
         </div>
-        <div className="w-[50%] py-[100px] flex flex-col justify-start items-center"></div>
+        <div className="w-[50%] py-[100px] flex flex-col justify-center items-center">
+          <Image
+            className={`w-[500px] transition-all duration-1000 ${
+              isVisible
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-10'
+            }`}
+            src={projectImages}
+            alt="세가지의 만들어진 프로젝트 사진"
+          />
+        </div>
       </div>
       <div className="h-[1080px] bg-black"></div>
     </div>
