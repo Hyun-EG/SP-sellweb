@@ -1,25 +1,24 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/User';
 
-function checkUserName(userName: string): boolean {
+export function checkUserName(userName: string): boolean {
   const userNameRegex = /^[a-zA-Z가-힣]{3,20}$/;
   return userNameRegex.test(userName);
 }
 
-function checkUserId(userId: string): boolean {
+export function checkUserId(userId: string): boolean {
   const userIdRegex = /^[a-zA-Z0-9_]{4,20}$/;
   return userIdRegex.test(userId);
 }
 
-function checkEmail(email: string): boolean {
+export function checkEmail(email: string): boolean {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return emailRegex.test(email);
 }
 
-function checkPassword(password: string): boolean {
+export function checkPassword(password: string): boolean {
   const passwordRegex =
     /^(?=.*[A-Z])(?=.*\d)(?=.*[a-z])(?=.*[!@#$%^&*()_+={}\[\]:;"'<>,.?/]).{8,}$/;
-
   return passwordRegex.test(password);
 }
 
@@ -58,13 +57,12 @@ export default async function signupUser(
     throw new Error('비밀번호가 서로 일치하지 않습니다.');
   }
 
-  // 가입된 이메일 중복 확인
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     throw new Error('이미 가입된 이메일입니다.');
   }
 
-  const hashedPassword = await hashPassword(password);
+  const hashedPassword = await hashPassword(password!);
 
   const user = new User({
     userName,
