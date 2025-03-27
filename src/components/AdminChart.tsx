@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
 
 const AdminChart = () => {
@@ -10,6 +10,8 @@ const AdminChart = () => {
   }
 
   const [temps, setTemps] = useState<Temp[]>([]);
+  const chartRef = useRef<Chart | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,53 +31,56 @@ const AdminChart = () => {
   }, []);
 
   useEffect(() => {
-    const ctx = document.getElementById(
-      'templateSellingRate'
-    ) as HTMLCanvasElement;
-    let chartInstance: Chart | null = null;
-
-    if (ctx && temps.length > 0) {
-      const context = ctx.getContext('2d');
-      if (context) {
-        const labels = temps.map((temp) => temp.title);
-
-        // DB에 데이터 어떻게 저장할건지 (템플릿 의뢰하기 누르면 카운트 올라가고, DB도 카운트)
-        const data = temps.map((temp) => temp.sellingCount);
-
-        chartInstance = new Chart(context, {
-          type: 'doughnut',
-          data: {
-            labels,
-            datasets: [
-              {
-                label: '판매량',
-                data,
-                borderWidth: 1,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-          },
-        });
-      }
+    if (!canvasRef.current) {
+      return;
     }
 
-    // 컴포넌트 언마운트 시 차트 캔버스 제거
+    const context = canvasRef.current.getContext('2d');
+    if (!context) {
+      return;
+    }
+
+    const labels = temps.map((temp) => temp.title);
+
+    // DB에 데이터 어떻게 저장할건지 (템플릿 의뢰하기 누르면 카운트 올라가고, DB도 카운트)
+    const data = temps.map((temp) => temp.sellingCount);
+
+    if (chartRef.current) {
+      chartRef.current.data.labels = labels;
+      chartRef.current.data.datasets[0].data = data;
+      chartRef.current.update();
+    } else {
+      chartRef.current = new Chart(context, {
+        type: 'doughnut',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: '판매량',
+              data,
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+        },
+      });
+    }
+
     return () => {
-      if (chartInstance) {
-        chartInstance.destroy();
+      if (chartRef.current) {
+        chartRef.current.destroy();
+        chartRef.current = null;
       }
     };
   }, [temps]);
 
   return (
-    <>
-      <div className="max-w-[330px] sm:max-w-[330px] md:max-w-[700px]">
-        <canvas id="templateSellingRate"></canvas>
-      </div>
-    </>
+    <div className="max-w-[330px] sm:max-w-[330px] md:max-w-[700px]">
+      <canvas ref={canvasRef}></canvas>
+    </div>
   );
 };
 
