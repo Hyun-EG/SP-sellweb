@@ -5,6 +5,7 @@ import iconChatWhite from '../../public/svgs/icon-chat(D).svg';
 import ChatBox from './ChatBox';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import AlertModal from './AlertModal';
 
 type ChatBtnStyleProps = {
   backgroundColor: string;
@@ -12,6 +13,7 @@ type ChatBtnStyleProps = {
 
 const ChatBtn = ({ backgroundColor }: ChatBtnStyleProps) => {
   const [chatIsShow, setChatIsShow] = useState(false);
+  const [isShowAlert, setIsShowAlert] = useState(false);
   const { data } = useSession();
   const loginStatus = data?.user || false;
 
@@ -27,7 +29,7 @@ const ChatBtn = ({ backgroundColor }: ChatBtnStyleProps) => {
           if (loginStatus) {
             setChatIsShow((prev) => !prev);
           } else {
-            alert('로그인이 필요합니다');
+            setIsShowAlert(true);
           }
         }}
         style={{ backgroundColor }}
@@ -36,6 +38,16 @@ const ChatBtn = ({ backgroundColor }: ChatBtnStyleProps) => {
         <Image src={iconChatWhite} alt="채팅 버튼" />
       </div>
       {chatIsShow && <ChatBox />}
+      {isShowAlert && (
+        <AlertModal
+          title="로그인이 필요합니다."
+          content="계속하려면 로그인이 필요합니다."
+          btnName="확인"
+          onClick={() => {
+            setIsShowAlert(false);
+          }}
+        />
+      )}
     </div>
   );
 };

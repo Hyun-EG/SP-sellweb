@@ -88,7 +88,7 @@ const ClientTable = ({
           onClick={() => {
             router.push('/');
           }}
-          title="로그인이 필요합니다"
+          title="로그인이 필요합니다."
           content="계속하시려면 로그인이 필요합니다."
           btnName="확인"
         />
