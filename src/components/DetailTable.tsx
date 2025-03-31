@@ -1,6 +1,7 @@
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Button from './Button';
+import { useSession } from 'next-auth/react';
 
 interface DetailTableProps {
   title: string;
@@ -15,6 +16,7 @@ interface DetailTableProps {
 
 interface Post {
   _id: string;
+  userId: string;
   title: string;
   createdAt: string;
 }
@@ -42,8 +44,10 @@ export default function DetailTable({
 
   const currentId = path.split('/').pop();
 
+  const { data } = useSession();
+
   useEffect(() => {
-    if (!isNotice) {
+    if (!isNotice && data?.user?.userId) {
       const fetchPosts = async () => {
         try {
           const response = await fetch('/api/get-posts');
@@ -51,19 +55,28 @@ export default function DetailTable({
             throw new Error('데이터를 가져올 수 없습니다.');
           }
 
-          const data: Post[] = await response.json();
+          const allPosts: Post[] = await response.json();
+          console.log(allPosts);
 
-          const currentIndex = data.findIndex((post) => post._id === currentId);
+          const userPosts = allPosts.filter(
+            (post) => post.userId === data.user.userId
+          );
+
+          const currentIndex = userPosts.findIndex(
+            (post) => post._id === currentId
+          );
           if (currentIndex === -1) {
             return;
           }
 
-          const prev = currentIndex > 0 ? data[currentIndex - 1] : null;
-          setPreviousPost(prev);
-
-          const next =
-            currentIndex < data.length - 1 ? data[currentIndex + 1] : null;
-          setNextPost(next);
+          setPreviousPost(
+            currentIndex > 0 ? userPosts[currentIndex - 1] : null
+          );
+          setNextPost(
+            currentIndex < userPosts.length - 1
+              ? userPosts[currentIndex + 1]
+              : null
+          );
         } catch (error) {
           console.error(error);
         }
@@ -73,7 +86,7 @@ export default function DetailTable({
         fetchPosts();
       }
     }
-  }, [currentId, isNotice]);
+  }, [currentId, isNotice, data?.user?.userId]);
 
   useEffect(() => {
     if (isNotice) {

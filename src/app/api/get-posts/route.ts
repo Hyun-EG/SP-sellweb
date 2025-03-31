@@ -26,12 +26,13 @@ export async function GET(request: Request) {
     }
 
     const posts = await Post.find(filter)
-      .select('title createdAt userName _id reply')
+      .select('title createdAt userName _id reply userId')
       .sort({ createdAt: 1 });
 
     const formattedPosts = posts.map((post) => ({
       _id: post._id.toString(),
       userName: post.userName,
+      userId: post.userId,
       title: post.title,
       createdAt: post.createdAt.toISOString().split('T')[0],
       answer: post.reply || null,
