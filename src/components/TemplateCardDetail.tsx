@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Button from './Button';
 import SlideBar from './SlideBar';
+import Payment from './Payment';
 import fillHeartIcon from '../../public/svgs/icon-fillHeart.svg';
 import emptyHeartIcon from '../../public/svgs/icon-emptyHeart.svg';
 import dummyImage from '../../public/bgs/bg-meeting.webp';
@@ -20,6 +21,7 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
     priceInfo?: string;
     sellingCount?: number;
     imageUrls?: string;
+    price: number;
   }
 
   const [data, setData] = useState<TemplateData | null>(null);
@@ -41,8 +43,7 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
     fetchData();
   }, [id]);
 
-  // sellingCount 증가
-  const handleOrder = async () => {
+  const handleOrderSuccess = async () => {
     try {
       const res = await fetch(`/api/template/${id}/order`, {
         method: 'POST',
@@ -50,31 +51,24 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
           'Content-Type': 'application/json',
         },
       });
+
+      if (!res.ok) {
+        throw new Error('판매량 업데이트 실패');
+      }
+
       const result = await res.json();
 
-      if (res.ok) {
-        setData((prev: TemplateData | null) =>
-          prev
-            ? {
-                ...prev,
-                sellingCount: result.sellingCount,
-              }
-            : prev
-        );
-      } else {
-        throw new Error(result.error || '의뢰하기 요청 실패');
-      }
+      setData((prev) =>
+        prev
+          ? {
+              ...prev,
+              sellingCount: result.sellingCount,
+            }
+          : prev
+      );
     } catch (error) {
-      console.error('의뢰하기 요청 실패:', error);
+      console.error('판매량 증가 처리 실패:', error);
     }
-  };
-
-  const handleTabChange = (index: number) => {
-    const refs = [serviceRef, priceRef];
-    refs[index]?.current?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    });
   };
 
   if (!data) {
@@ -100,16 +94,12 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
             </header>
             <p className="whitespace-wrap font-bold">{data.description}</p>
             <footer className="flex justify-between items-center mt-4">
-              <Button
-                theme="white"
-                state="default"
-                width={400}
-                height={40}
-                color="slateGray"
-                onClick={handleOrder}
-              >
-                의뢰하기
-              </Button>
+              <Payment
+                id={id}
+                title={data.title}
+                priceInfo={parseFloat(data.priceInfo || '0')}
+                onOrderSuccess={handleOrderSuccess}
+              />
               <div className="flex flex-col items-center">
                 <button
                   onClick={() => setIsHeart(!isHeart)}
@@ -132,7 +122,13 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
         <SlideBar
           items={['서비스 소개', '가격 정보']}
           slideWidth={120}
-          onTabChange={handleTabChange}
+          onTabChange={(index) => {
+            const refs = [serviceRef, priceRef];
+            refs[index]?.current?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start',
+            });
+          }}
           activeIndex={0}
         />
       </nav>
