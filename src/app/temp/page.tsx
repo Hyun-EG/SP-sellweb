@@ -8,21 +8,21 @@ export default function Temp() {
       <TemplateCard
         title="실시간 사원관리 웹사이트"
         subscription="이거 사원관리 잘됨"
-        deadline="D-24"
+        deadline="24"
         request={2}
         borderRadius={12}
       />
       <TemplateCard
         title="실시간 사원관리 웹사이트"
         subscription="이거 사원관리 잘됨"
-        deadline="D-24"
+        deadline="24"
         request={2}
         borderRadius={12}
       />
       <TemplateCard
         title="실시간 사원관리 웹사이트"
         subscription="이거 사원관리 잘됨"
-        deadline="D-24"
+        deadline="24"
         request={2}
         borderRadius={12}
       />
