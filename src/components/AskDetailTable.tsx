@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Button from './Button';
 import Input from './Input';
 import { useSession } from 'next-auth/react';
+import AlertModal from './AlertModal';
+import { useRouter } from 'next/navigation';
 
 export default function AskDetailTable() {
   const { data: session, status } = useSession();
@@ -16,6 +18,9 @@ export default function AskDetailTable() {
     date: string;
   } | null>(null);
 
+  const [isShowAlert, setIsShowAlert] = useState(false);
+  const router = useRouter();
+
   useEffect(() => {
     if (session?.user) {
       setUserData({
@@ -23,21 +28,22 @@ export default function AskDetailTable() {
         userId: session.user.userId,
         date: new Date().toISOString().split('T')[0],
       });
+    } else {
+      setIsShowAlert(true);
     }
-  }, [session]);
+
+    return () => {
+      setIsShowAlert(false);
+    };
+  }, [session, isShowAlert]);
 
   const handleSubmit = async () => {
-    if (!session?.user) {
-      alert('로그인이 필요합니다.');
-      return;
-    }
-
     try {
       const response = await fetch('/api/posts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.user.accessToken}`,
+          Authorization: `Bearer ${session?.user.accessToken}`,
         },
         body: JSON.stringify({ title, content }),
       });
@@ -131,6 +137,16 @@ export default function AskDetailTable() {
           취소
         </Button>
       </div>
+      {isShowAlert && (
+        <AlertModal
+          title="로그인이 필요합니다."
+          content="계속하려면 로그인이 필요합니다."
+          btnName="확인"
+          onClick={() => {
+            router.push('/');
+          }}
+        />
+      )}
     </div>
   );
 }

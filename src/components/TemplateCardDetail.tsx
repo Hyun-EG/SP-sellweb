@@ -7,6 +7,7 @@ import 'swiper/css';
 import Image from 'next/image';
 import Button from './Button';
 import SlideBar from './SlideBar';
+import Payment from './Payment';
 import fillHeartIcon from '../../public/svgs/icon-fillHeart.svg';
 import emptyHeartIcon from '../../public/svgs/icon-emptyHeart.svg';
 
@@ -25,7 +26,8 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
     service?: string;
     priceInfo?: string;
     sellingCount?: number;
-    imageUrls?: (string | StaticImageData)[];
+    imageUrls?: string[];
+    price: number;
   }
 
   const [data, setData] = useState<TemplateData | null>(null);
@@ -47,7 +49,7 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
     fetchData();
   }, [id]);
 
-  const handleOrder = async () => {
+  const handleOrderSuccess = async () => {
     try {
       const res = await fetch(`/api/template/${id}/order`, {
         method: 'POST',
@@ -55,104 +57,109 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
           'Content-Type': 'application/json',
         },
       });
+
+      if (!res.ok) {
+        throw new Error('판매량 업데이트 실패');
+      }
       const result = await res.json();
 
-      if (res.ok) {
-        setData((prev: TemplateData | null) =>
-          prev
-            ? {
-                ...prev,
-                sellingCount: result.sellingCount,
-              }
-            : prev
-        );
-      } else {
-        throw new Error(result.error || '의뢰하기 요청 실패');
-      }
+      setData((prev) =>
+        prev
+          ? {
+              ...prev,
+              sellingCount: result.sellingCount,
+            }
+          : prev
+      );
     } catch (error) {
-      console.error('의뢰하기 요청 실패:', error);
+      console.error('판매량 증가 처리 실패:', error);
     }
-  };
-
-  const handleTabChange = (index: number) => {
-    const refs = [serviceRef, priceRef];
-    refs[index]?.current?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    });
   };
 
   if (!data) {
     return <div className="text-center text-lg">로딩중</div>;
   }
 
+  const ImageUrls = data.imageUrls || [];
+
   return (
     <>
-      <div className="flex items-center justify-between mt-2">
-        <div className="flex justify-center w-[50%] h-[200px]">
-          <Swiper spaceBetween={20} slidesPerView={1} loop>
-            {data.imageUrls?.map((image, index) => (
-              <SwiperSlide key={index}>
-                <div className="w-[450px] h-[200px] relative overflow-hidden rounded-lg justify-center">
+      <section className="w-full mt-[20px]">
+        <article className="flex justify-between items-end h-[300px]">
+          <section className="w-[45%]">
+            <Swiper spaceBetween={20} slidesPerView={1} loop>
+              {ImageUrls.map((image, index) => (
+                <SwiperSlide key={index}>
+                  <div className="w-full h-[300px] relative overflow-hidden rounded-lg">
+                    <Image
+                      src={image}
+                      alt={`템플릿 이미지 ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </section>
+
+          <div className="flex flex-col justify-between w-[500px] h-full">
+            <header>
+              <h2 className="text-[24px] font-bold">{data.title}</h2>
+            </header>
+            <p className="whitespace-wrap font-bold">{data.description}</p>
+            <footer className="flex justify-between items-center mt-4">
+              <Payment
+                id={id}
+                title={data.title}
+                priceInfo={parseFloat(data.priceInfo || '0')}
+                onOrderSuccess={handleOrderSuccess}
+              />
+              <div className="flex flex-col items-center">
+                <button
+                  onClick={() => setIsHeart(!isHeart)}
+                  className="cursor-pointer items-center"
+                  aria-label="찜하기 버튼"
+                >
                   <Image
-                    src={image}
-                    alt={`템플릿 이미지 ${index + 1}`}
-                    fill
-                    className="object-cover"
+                    src={isHeart ? fillHeartIcon : emptyHeartIcon}
+                    alt="찜하기 하트 아이콘"
+                    className="flex items-center ml-3"
                   />
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
-
-        <div className="flex flex-col justify-between w-[40%] h-[200px]">
-          <h2 className="text-[24px] font-bold">{data.title}</h2>
-          <p className="whitespace-wrap font-bold">{data.description}</p>
-          <div className="flex justify-between items-center mt-4">
-            <Button
-              theme="white"
-              state="default"
-              width={400}
-              height={40}
-              color="slateGray"
-              onClick={handleOrder}
-            >
-              의뢰하기
-            </Button>
-            <div className="flex flex-col items-center">
-              <div
-                onClick={() => setIsHeart(!isHeart)}
-                className="cursor-pointer items-center"
-              >
-                <Image
-                  src={isHeart ? fillHeartIcon : emptyHeartIcon}
-                  alt="찜하기 하트 아이콘"
-                  className="flex items-center ml-3"
-                />
+                </button>
               </div>
-            </div>
+            </footer>
           </div>
-        </div>
-      </div>
+        </article>
+      </section>
 
-      <SlideBar
-        items={['서비스 소개', '가격 정보']}
-        slideWidth={120}
-        onTabChange={handleTabChange}
-        activeIndex={0}
-      />
-      <div className="mt-6 flex flex-col gap-10">
-        <div ref={serviceRef} className="w-full h-[300px]">
+      <nav>
+        <SlideBar
+          items={['서비스 소개', '가격 정보']}
+          slideWidth={120}
+          onTabChange={(index) => {
+            const refs = [serviceRef, priceRef];
+            refs[index]?.current?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start',
+            });
+          }}
+          activeIndex={0}
+        />
+      </nav>
+
+      <section className="mt-6 flex flex-col gap-10">
+        <article ref={serviceRef} className="w-full h-[300px]">
           <h3 className="text-xl font-bold">서비스 소개</h3>
           <p>{data.service || '서비스 소개 내용 없음'}</p>
-        </div>
+        </article>
 
-        <div ref={priceRef} className="w-full h-[300px]">
+        <article ref={priceRef} className="w-full h-[300px]">
           <h3 className="text-xl font-bold">가격 정보</h3>
           <p>{data.priceInfo || '가격 정보 없음'}</p>
-        </div>
-      </div>
+        </article>
+      </section>
+
       <div className="flex justify-center mt-6">
         <Button theme="white" state="default" width={1200} height={60}>
           더보기

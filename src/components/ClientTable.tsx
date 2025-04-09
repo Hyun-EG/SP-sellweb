@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import React, { Suspense } from 'react';
+import { useSession } from 'next-auth/react';
+import AlertModal from './AlertModal';
 
 const ClientTable = ({
   headers,
@@ -18,9 +20,25 @@ const ClientTable = ({
 }) => {
   const [curPageShowData, setCurPageShowData] = useState<string[][]>([]);
   const [curRowIds, setCurRowIds] = useState<string[]>([]);
+  const [isShowAlertModal, setIsShowAlertModal] = useState(false);
 
   const searchParams = useSearchParams();
   const page = searchParams.get('page') || '1';
+
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === 'loading') {
+      return;
+    }
+    if (!session) {
+      setIsShowAlertModal(true);
+    }
+    return () => {
+      setIsShowAlertModal(false);
+    };
+  }, [session, status, router]);
 
   useEffect(() => {
     if (rows.length === 0 || rowIds.length === 0) {
@@ -65,6 +83,16 @@ const ClientTable = ({
           </Link>
         ))}
       </div>
+      {isShowAlertModal && (
+        <AlertModal
+          onClick={() => {
+            router.push('/');
+          }}
+          title="로그인이 필요합니다."
+          content="계속하시려면 로그인이 필요합니다."
+          btnName="확인"
+        />
+      )}
     </div>
   );
 };

@@ -5,7 +5,7 @@ const TempSchema = new mongoose.Schema({
   description: { type: String, required: false },
   imageUrls: { type: [String], required: false },
   service: { type: String, required: false },
-  priceInfo: { type: String, required: false },
+  priceInfo: { type: Number, required: false },
   sellingCount: { type: Number, require: false },
   createdAt: { type: Date },
 });

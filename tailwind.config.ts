@@ -21,12 +21,17 @@ export default {
       },
       animation: {
         rotateMenu: 'rotateMenu 400ms ease-in-out forwards',
+        slideImage: 'bannerMove 30s linear infinite',
       },
       keyframes: {
         rotateMenu: {
           '0%': { transform: 'rotateX(-90deg)' },
           '70%': { transform: 'rotateX(20deg)' },
           '100%': { transform: 'rotateX(0deg)' },
+        },
+        bannerMove: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-100%)' },
         },
       },
       transformOrigin: {

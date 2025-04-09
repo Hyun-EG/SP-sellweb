@@ -4,6 +4,8 @@ import { useEffect, useState, Suspense } from 'react';
 import { useSession } from 'next-auth/react';
 import Table from '@/components/Table';
 import TitleBox from '@/components/TitleBox';
+import { useRouter } from 'next/navigation';
+import AlertModal from '@/components/AlertModal';
 
 interface Post {
   userName: string;
@@ -16,9 +18,21 @@ export default function Page() {
   const [allRows, setAllRows] = useState<string[][]>([]);
   const [rowIds, setRowIds] = useState<string[]>([]);
   const [page, setPage] = useState<string>('1');
+  const [isShowAlert, setIsShowAlert] = useState(false);
 
   const { data } = useSession();
   const loginState = data?.user;
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loginState) {
+      setIsShowAlert(true);
+    }
+    return () => {
+      setIsShowAlert(false);
+    };
+  }, [loginState, isShowAlert]);
 
   useEffect(() => {
     // 클라이언트에서만 window.location.search 사용
@@ -75,6 +89,16 @@ export default function Page() {
           />
         )}
       </Suspense>
+      {isShowAlert && (
+        <AlertModal
+          title="로그인이 필요합니다."
+          content="계속하려면 로그인이 필요합니다."
+          btnName="확인"
+          onClick={() => {
+            router.push('/');
+          }}
+        />
+      )}
     </div>
   );
 }
