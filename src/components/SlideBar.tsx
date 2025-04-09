@@ -1,17 +1,31 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
-const SlideBar = () => {
-  const [activeIconIndex, setActiveIconIndex] = useState<number | null>(null);
+interface SlideBarProps {
+  slideWidth: number;
+  items: string[];
+  // eslint-disable-next-line no-unused-vars
+  onTabChange: (index: number) => void;
+  activeIndex: number;
+}
+
+const SlideBar = ({
+  items = ['서비스 소개', '가격 정보', '리뷰'],
+  slideWidth = 200,
+  onTabChange,
+  activeIndex,
+}: SlideBarProps) => {
+  const [activeIconIndex, setActiveIconIndex] = useState<number | null>(
+    activeIndex
+  );
   const [slideOffset, setSlideOffset] = useState(0);
 
   const handleIconClick = (index: number) => {
     setActiveIconIndex(index);
-    const navIconElement = document.getElementsByClassName('nav-icon')[
-      index
-    ] as HTMLElement;
-    setSlideOffset(navIconElement.offsetLeft);
+    if (onTabChange) {
+      onTabChange(index);
+    }
   };
 
   useEffect(() => {
@@ -20,40 +34,40 @@ const SlideBar = () => {
         const navIconElement = document.getElementsByClassName('nav-icon')[
           activeIconIndex
         ] as HTMLElement;
-        setSlideOffset(navIconElement.offsetLeft);
+        if (navIconElement) {
+          setSlideOffset(navIconElement.offsetLeft);
+        }
       }
     };
+
     window.addEventListener('resize', handleResize);
+    handleResize();
     return () => window.removeEventListener('resize', handleResize);
   }, [activeIconIndex]);
 
   return (
-    <>
-      <div className="w-[100%] h-[120px]"></div>
-      <div className="relative flex flex-col items-center w-full h-[100px] ">
-        <div className="flex justify-center items-center w-full border-b-[1px] border-gray-300">
-          {activeIconIndex !== null && (
+    <div className="relative flex flex-col items-center w-full h-[100px]">
+      <div className="flex justify-center items-center w-full border-b-[1px] border-gray-300 relative">
+        {activeIconIndex !== null && (
+          <div
+            className="absolute bottom-[-2px] h-[3px] bg-lightPurple transition-all duration-300"
+            style={{ left: `${slideOffset}px`, width: `${slideWidth}px` }}
+          ></div>
+        )}
+        <div className="flex w-full items-center">
+          {items.map((text, index) => (
             <div
-              className="absolute bottom-[-2px] h-[3px] w-[200px] bg-lightPurple transition-all duration-300 mt-2"
-              style={{ left: `${slideOffset}px` }}
-            ></div>
-          )}
-          <div className="flex w-[100%] items-center ">
-            {['서비스 소개', '가격 정보', '리뷰'].map((text, index) => (
-              <div
-                key={index}
-                className={
-                  'nav-icon cursor-pointer flex justify-center items-center text-center text-sm w-[200px] h-[100px] transition-all font-bold'
-                }
-                onClick={() => handleIconClick(index)}
-              >
-                {text}
-              </div>
-            ))}
-          </div>
+              key={index}
+              className={`nav-icon cursor-pointer flex justify-center items-center text-center text-sm transition-all font-bold ${activeIconIndex === index ? 'text-lightPurple' : ''}`}
+              style={{ width: `${slideWidth}px`, height: '100px' }}
+              onClick={() => handleIconClick(index)}
+            >
+              {text}
+            </div>
+          ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

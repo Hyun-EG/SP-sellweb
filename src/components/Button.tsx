@@ -34,9 +34,9 @@ const Button = ({
       return;
     }
     if (variant === 'request') {
-      console.log('인증 요청');
+      alert('인증 요청');
     } else if (variant === 'confirm') {
-      console.log('인증 확인');
+      alert('인증 확인');
     }
 
     if (onClick) {
@@ -54,8 +54,7 @@ const Button = ({
     height: height ? `${height}px` : 'auto',
     backgroundColor:
       state === 'disabled' ? '#d3d3d3' : color || defaultColors[theme],
-    color: state === 'disabled' ? '#808080' : fontColor || '#FFFFFF',
-    cursor: state === 'disabled' ? 'not-allowed' : 'pointer',
+    color: state === 'disabled' ? '#F4F4F4' : fontColor || '#FFFFFF',
     opacity: state === 'disabled' ? 0.6 : 1,
   };
 
@@ -63,7 +62,7 @@ const Button = ({
     <button
       type="button"
       style={buttonStyle}
-      className="font-semibold rounded-lg shadow-md border border-neutralGray"
+      className="font-semibold rounded-lg shadow-ㅡ border-2 border-neutralGray"
       onClick={handleClick}
       disabled={state === 'disabled'}
     >

@@ -7,6 +7,7 @@ import Contents from '@/components/Contents';
 import ChatBtn from '@/components/ChatBtn';
 import BackToTop from '@/components/BackToTop';
 import AdBox from '@/components/AdBox';
+import AuthWrapper from '@/components/AuthWrapper';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -22,20 +23,17 @@ export const metadata: Metadata = {
   title: 'SellWeb',
   description: 'selling my project',
   icons: {
-    icon: '/icons/icon-192x192.png', // PWA 아이콘
+    icon: '/icons/icon-192x192.png',
   },
-  manifest: '/manifest.json', // PWA manifest 파일
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ko">
       <head>
-        {/* PWA 관련 메타 태그 */}
         <meta name="theme-color" content="#000000" />
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/icons/icon-192x192.png" />
@@ -43,12 +41,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AdBox content="광고글입니다." />
-        <NavBar />
-        <Contents>{children}</Contents>
-        <ChatBtn backgroundColor="black" />
-        <BackToTop />
-        <Footer />
+        <AuthWrapper>
+          <AdBox />
+          <NavBar />
+          <Contents>{children}</Contents>
+          <ChatBtn backgroundColor="black" />
+          <BackToTop />
+          <Footer />
+        </AuthWrapper>
       </body>
     </html>
   );
