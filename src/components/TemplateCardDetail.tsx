@@ -1,16 +1,22 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { StaticImageData } from 'next/image';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
 import Image from 'next/image';
 import Button from './Button';
 import SlideBar from './SlideBar';
 import Payment from './Payment';
 import fillHeartIcon from '../../public/svgs/icon-fillHeart.svg';
 import emptyHeartIcon from '../../public/svgs/icon-emptyHeart.svg';
-import dummyImage from '../../public/bgs/bg-meeting.webp';
 
 interface TemplateCardProps {
   id: string;
+  borderRadius?: number;
+  width?: number;
+  height?: number;
+  templateImages?: (string | StaticImageData)[];
 }
 
 const TemplateCardDetail = ({ id }: TemplateCardProps) => {
@@ -20,7 +26,7 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
     service?: string;
     priceInfo?: string;
     sellingCount?: number;
-    imageUrls?: string;
+    imageUrls?: string[];
     price: number;
   }
 
@@ -55,7 +61,6 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
       if (!res.ok) {
         throw new Error('판매량 업데이트 실패');
       }
-
       const result = await res.json();
 
       setData((prev) =>
@@ -75,19 +80,29 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
     return <div className="text-center text-lg">로딩중</div>;
   }
 
+  const ImageUrls = data.imageUrls || [];
+
   return (
     <>
       <section className="w-full mt-[20px]">
-        <article className="flex justify-between items-end h-[290px]">
-          <section className="flex flex-col justify-evenly w-[45%]">
-            <Image
-              src={data.imageUrls?.[0] || dummyImage}
-              alt="템플릿 이미지"
-              className="w-full h-full object-cover"
-              width={400}
-              height={40}
-            />
+        <article className="flex justify-between items-end h-[300px]">
+          <section className="w-[45%]">
+            <Swiper spaceBetween={20} slidesPerView={1} loop>
+              {ImageUrls.map((image, index) => (
+                <SwiperSlide key={index}>
+                  <div className="w-full h-[300px] relative overflow-hidden rounded-lg">
+                    <Image
+                      src={image}
+                      alt={`템플릿 이미지 ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </section>
+
           <div className="flex flex-col justify-between w-[500px] h-full">
             <header>
               <h2 className="text-[24px] font-bold">{data.title}</h2>
