@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { StaticImageData } from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
+
 import Image from 'next/image';
 import Button from './Button';
 import SlideBar from './SlideBar';
@@ -24,6 +26,7 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
     title: string;
     description: string;
     service?: string;
+    image?: string;
     priceInfo?: string;
     sellingCount?: number;
     imageUrls?: string[];
@@ -33,7 +36,10 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
   const [data, setData] = useState<TemplateData | null>(null);
   const [isHeart, setIsHeart] = useState(false);
 
+  const router = useRouter();
+
   const serviceRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
   const priceRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -109,12 +115,23 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
             </header>
             <p className="whitespace-wrap font-bold">{data.description}</p>
             <footer className="flex justify-between items-center mt-4">
-              <Payment
-                id={id}
-                title={data.title}
-                priceInfo={parseFloat(data.priceInfo || '0')}
-                onOrderSuccess={handleOrderSuccess}
-              />
+              {data.priceInfo && Number(data.priceInfo) > 0 ? (
+                <Payment
+                  id={id}
+                  title={data.title}
+                  priceInfo={data.priceInfo ? Number(data.priceInfo) : 0}
+                  onOrderSuccess={handleOrderSuccess}
+                />
+              ) : (
+                <Button
+                  theme="white"
+                  width={400}
+                  height={40}
+                  onClick={() => router.push('/ask')}
+                >
+                  의뢰하기
+                </Button>
+              )}
               <div className="flex flex-col items-center">
                 <button
                   onClick={() => setIsHeart(!isHeart)}
@@ -135,10 +152,10 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
 
       <nav>
         <SlideBar
-          items={['서비스 소개', '가격 정보']}
+          items={['서비스 소개', '이미지', '가격 정보']}
           slideWidth={120}
           onTabChange={(index) => {
-            const refs = [serviceRef, priceRef];
+            const refs = [serviceRef, imageRef, priceRef];
             refs[index]?.current?.scrollIntoView({
               behavior: 'smooth',
               block: 'start',
@@ -153,7 +170,25 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
           <h3 className="text-xl font-bold">서비스 소개</h3>
           <p>{data.service || '서비스 소개 내용 없음'}</p>
         </article>
-
+        <article ref={imageRef}>
+          <h3 className="text-xl font-bold mb-4">이미지</h3>
+          {data.imageUrls && data.imageUrls.length > 0 ? (
+            <div className="grid grid-cols-2 gap-4">
+              {data.imageUrls.map((url, index) => (
+                <div key={index} className="h-48 relative">
+                  <Image
+                    src={url}
+                    alt={`템플릿 이미지 ${index + 1}`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>이미지가 없습니다</p>
+          )}
+        </article>
         <article ref={priceRef} className="w-full h-[300px]">
           <h3 className="text-xl font-bold">가격 정보</h3>
           <p>{data.priceInfo || '가격 정보 없음'}</p>
