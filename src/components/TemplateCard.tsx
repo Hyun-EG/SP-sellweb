@@ -9,23 +9,23 @@ import human from '../../public/svgs/icon-man(W).svg';
 import Button from '@/components/Button';
 import Link from 'next/link';
 
-interface TemplateCardProps {
+export interface TemplateCardProps {
   borderRadius?: number;
   width?: number;
   height?: number;
   templateImages?: (string | StaticImageData)[];
 }
 
-const TemplateCard = ({ width, borderRadius, height }: TemplateCardProps) => {
-  interface Template {
-    _id: string;
-    title: string;
-    description: string;
-    imageUrls?: (string | StaticImageData)[];
-    subscription?: string;
-    sellingCount?: number;
-  }
+export interface Template {
+  _id: string;
+  title: string;
+  description: string;
+  imageUrls?: (string | StaticImageData)[];
+  subscription?: string;
+  sellingCount?: number;
+}
 
+const TemplateCard = ({ width, borderRadius, height }: TemplateCardProps) => {
   const [tempList, setTempList] = useState<Template[]>([]);
 
   const fetchTemplates = async () => {
@@ -46,7 +46,6 @@ const TemplateCard = ({ width, borderRadius, height }: TemplateCardProps) => {
 
   useEffect(() => {
     fetchTemplates();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const cardStyle = {
@@ -88,9 +87,9 @@ const TemplateCard = ({ width, borderRadius, height }: TemplateCardProps) => {
             </div>
             <p className="font-bold">{temp.subscription}</p>
           </div>
-          <div className="flex flex-col justify-evenly w-[20%]">
+          <div className="flex flex-col justify-evenly w-[30%]">
             <div className="h-[60%] relative">
-              <div className="absolute top-0 bottom-[50px] right-[210px] w-px bg-gray-300"></div>
+              <div className="absolute top-0 bottom-[50px] right-[320px] w-px bg-gray-300"></div>
               <div
                 onClick={() => setIsHeart(!isHeart)}
                 className="cursor-pointer"
