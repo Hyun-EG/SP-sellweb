@@ -9,6 +9,7 @@ export const connectDB = async () => {
       dbName: 'sellweb',
     });
   } catch (error) {
-    alert(error);
+    // eslint-disable-next-line no-console
+    console.log(error);
   }
 };

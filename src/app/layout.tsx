@@ -4,7 +4,6 @@ import './globals.css';
 import NavBar from '@/components/NavBar';
 import Footer from '@/components/Footer';
 import Contents from '@/components/Contents';
-import ChatBtn from '@/components/ChatBtn';
 import BackToTop from '@/components/BackToTop';
 import AdBox from '@/components/AdBox';
 import AuthWrapper from '@/components/AuthWrapper';
@@ -45,7 +44,6 @@ export default function RootLayout({
           <AdBox />
           <NavBar />
           <Contents>{children}</Contents>
-          <ChatBtn backgroundColor="black" />
           <BackToTop />
           <Footer />
         </AuthWrapper>

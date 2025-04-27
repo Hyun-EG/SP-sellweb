@@ -3,8 +3,6 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { StaticImageData } from 'next/image';
-import fillHeartIcon from '../../public/svgs/icon-fillHeart.svg';
-import emptyHeartIcon from '../../public/svgs/icon-emptyHeart.svg';
 import human from '../../public/svgs/icon-man(W).svg';
 import Button from '@/components/Button';
 import Link from 'next/link';
@@ -41,8 +39,6 @@ const TemplateCard = ({ width, borderRadius, height }: TemplateCardProps) => {
       console.error('템플릿 가져오기 실패', error);
     }
   };
-
-  const [isHeart, setIsHeart] = useState(false);
 
   useEffect(() => {
     fetchTemplates();
@@ -90,23 +86,13 @@ const TemplateCard = ({ width, borderRadius, height }: TemplateCardProps) => {
           <div className="flex flex-col justify-evenly w-[30%]">
             <div className="h-[60%] relative">
               <div className="absolute top-0 bottom-[50px] right-[320px] w-px bg-gray-300"></div>
-              <div
-                onClick={() => setIsHeart(!isHeart)}
-                className="cursor-pointer"
-              >
-                <Image
-                  src={isHeart ? fillHeartIcon : emptyHeartIcon}
-                  alt="찜하기 하트 아이콘"
-                  className="ml-[0.9px] "
-                />
-              </div>
               <p className="flex pt-2 ml-[2px] font-bold align-baseline">
                 <Image
                   src={human}
                   alt="의뢰 맡긴 사람 수 아이콘"
                   className="mr-2 ml-[1px]"
                 />
-                의뢰 {temp.sellingCount}명
+                의뢰 {temp.sellingCount ? temp.sellingCount : 0}명
               </p>
             </div>
             <div className="flex justify-end">

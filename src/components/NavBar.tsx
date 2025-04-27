@@ -9,7 +9,6 @@ import { useRouter } from 'next/navigation';
 import SubNav from './SubNav';
 import UserAuth from './UserAuth';
 import logo from '../../public/svgs/icon-logo.svg';
-import darkMode from '../../public/svgs/icon-moon.svg';
 import arrowDown from '../../public/svgs/icon-arrowDown.svg';
 
 const NavBar = () => {
@@ -24,10 +23,7 @@ const NavBar = () => {
   const userName = data?.user?.name || '사용자';
   const isAdmin = data?.user?.admin || false;
 
-  const templateItems = [
-    { label: '템플릿 소개', href: '/temp' },
-    { label: '기능 소개', href: '/features' },
-  ];
+  const templateItems = [{ label: '템플릿 소개', href: '/temp' }];
   const supportItems = [
     { label: '공지 사항', href: '/notice' },
     { label: '1:1 문의', href: '/ask' },
@@ -36,7 +32,6 @@ const NavBar = () => {
     { label: '구매내역', href: '/mypage/bought' },
     { label: '문의내역', href: '/mypage/ask' },
     { label: '내 정보 수정', href: '/mypage/edit' },
-    { label: '찜 목록', href: '/mypage/like' },
   ];
 
   const toggleDropdown = (dropdown: string) => {
@@ -186,13 +181,6 @@ const NavBar = () => {
               </Link>
             </>
           )}
-          <div className="flex items-center justify-center w-[80px] h-[80px]">
-            <Image
-              src={darkMode}
-              alt="다크모드 전환 버튼"
-              className="w-[30px] h-[30px] cursor-pointer"
-            />
-          </div>
         </ol>
       </header>
       {isAuthOpen && <UserAuth onClose={() => setIsAuthOpen(false)} />}

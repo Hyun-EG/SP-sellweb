@@ -10,8 +10,6 @@ import Image from 'next/image';
 import Button from './Button';
 import SlideBar from './SlideBar';
 import Payment from './Payment';
-import fillHeartIcon from '../../public/svgs/icon-fillHeart.svg';
-import emptyHeartIcon from '../../public/svgs/icon-emptyHeart.svg';
 
 interface TemplateCardProps {
   id: string;
@@ -34,7 +32,6 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
   }
 
   const [data, setData] = useState<TemplateData | null>(null);
-  const [isHeart, setIsHeart] = useState(false);
 
   const router = useRouter();
 
@@ -132,19 +129,6 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
                   의뢰하기
                 </Button>
               )}
-              <div className="flex flex-col items-center">
-                <button
-                  onClick={() => setIsHeart(!isHeart)}
-                  className="cursor-pointer items-center"
-                  aria-label="찜하기 버튼"
-                >
-                  <Image
-                    src={isHeart ? fillHeartIcon : emptyHeartIcon}
-                    alt="찜하기 하트 아이콘"
-                    className="flex items-center ml-3"
-                  />
-                </button>
-              </div>
             </footer>
           </div>
         </article>
@@ -194,12 +178,6 @@ const TemplateCardDetail = ({ id }: TemplateCardProps) => {
           <p>{data.priceInfo || '가격 정보 없음'}</p>
         </article>
       </section>
-
-      <div className="flex justify-center mt-6">
-        <Button theme="white" state="default" width={1200} height={60}>
-          더보기
-        </Button>
-      </div>
     </>
   );
 };

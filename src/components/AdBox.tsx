@@ -29,7 +29,6 @@ const AdBox = () => {
     fetchAds();
   }, []);
 
-  // 광고 5초마다 변경
   useEffect(() => {
     if (ads.length > 1) {
       const interval = setInterval(() => {
@@ -40,7 +39,6 @@ const AdBox = () => {
     }
   }, [ads]);
 
-  // 10초마다 광고 목록 자동 갱신 (새로운 광고 반영)
   useEffect(() => {
     const interval = setInterval(() => {
       fetchAds();

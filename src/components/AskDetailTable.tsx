@@ -63,7 +63,7 @@ export default function AskDetailTable() {
   };
 
   return (
-    <div>
+    <div className="min-h-screen">
       <div className="h-[80px] flex items-center">
         필요하신 문의를 남겨주세요. 빠른 시일 내에 답변 드리겠습니다.
       </div>

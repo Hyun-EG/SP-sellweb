@@ -121,7 +121,7 @@ const Page = () => {
 
   return (
     <>
-      <div className="flex justify-center items-center w-full h-[80vh] gap-[50px]">
+      <div className="flex justify-center items-center w-full min-h-screen gap-[50px]">
         <div>
           <div className="flex flex-col h-[600px] justify-start gap-[18px]">
             <h1 className="text-[64px]">셀웹에 오신것을 </h1>
@@ -135,7 +135,7 @@ const Page = () => {
             />
           </div>
         </div>
-        <div className="flex flex-col items-center gap-[18px] w-[600px]">
+        <div className="flex flex-col items-center gap-[18px] w-[600px] text-center">
           <h1 className="w-[500px] text-[28px] mb-[36px]">회원가입</h1>
           <Input
             state="default"

@@ -125,7 +125,6 @@ const Home = () => {
           />
         </div>
       </div>
-      <div className="h-[1080px] bg-black"></div>
     </div>
   );
 };
